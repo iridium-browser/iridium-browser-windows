@@ -21,6 +21,10 @@ rem Disable 4996 (deprecated functions in 8.1, these don't help us because we ha
 set CFLAGS=%CFLAGS% /wd4996 /D_WINSOCK_DEPRECATED_NO_WARNINGS
 set CXXFLAGS=%CXXFLAGS% /wd4996 /D_WINSOCK_DEPRECATED_NO_WARNINGS
 
+rem Ignore macro redefinitions for now, will get fixed upstream in iridium-browser
+set CFLAGS=%CFLAGS% /wd4005
+set CXXFLAGS=%CXXFLAGS% /wd4005
+
 cd develop/src
 
 echo Executing gclient hooks...
