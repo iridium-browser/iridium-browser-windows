@@ -29,7 +29,7 @@ fi
 
 echo "Checking for the required Vagrant box..."
 if ! vagrant box list | grep --quiet "opentable/win-8.1-core-amd64-nocm.*virtualbox"; then
-    vagrant box add --provider virtualbox opentable/win-8.1-core-amd64-nocm
+    vagrant box add --provider virtualbox --insecure opentable/win-8.1-core-amd64-nocm
 fi
 
 if [ ! -f "${ROOT}/Vagrantfile" ]; then
