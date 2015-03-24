@@ -3143,9 +3143,9 @@ index f14263c..72c30b2 100644
      const UpdateCheckCallback& update_check_callback) {
    DCHECK(thread_checker_.CalledOnValidThread());
 +  std::vector<GURL> zzz = config_.UpdateUrl();
-+  fprintf(stderr, "%s: enter\n", __PRETTY_FUNCTION__);
++  fprintf(stderr, "%s: enter\n", __FUNCSIG__);
 +  if (zzz.size() > 0)
-+  	fprintf(stderr, "%s: url=%s\n", __PRETTY_FUNCTION__, zzz[0].spec().c_str());
++  	fprintf(stderr, "%s: url=%s\n", __FUNCSIG__, zzz[0].spec().c_str());
  
    if (request_sender_.get()) {
      NOTREACHED();
