@@ -1,0 +1,5 @@
+.vagrant
+.ccache
+build_result
+vs2013.4_ce_enu.iso
+Vagrantfile

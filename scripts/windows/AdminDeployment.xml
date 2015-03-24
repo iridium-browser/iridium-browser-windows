@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AdminDeploymentCustomizations xmlns="http://schemas.microsoft.com/wix/2011/AdminDeployment">
+   <BundleCustomizations TargetDir="default" NoWeb="yes"/>
+
+   <SelectableItemCustomizations>
+     <SelectableItemCustomization Id="Blend" Hidden="no" Selected="no" />
+     <SelectableItemCustomization Id="VC_MFC_Libraries" Hidden="no" Selected="yes" />
+     <SelectableItemCustomization Id="SQL" Hidden="no" Selected="no" />
+     <SelectableItemCustomization Id="WebTools" Hidden="no" Selected="no" />
+     <SelectableItemCustomization Id="SilverLight_Developer_Kit" Hidden="no" Selected="no" />
+     <SelectableItemCustomization Id="Win8SDK" Hidden="no" Selected="yes" />
+     <SelectableItemCustomization Id="WindowsPhone80" Hidden="no" Selected="no" />
+
+     <SelectableItemCustomization Id="BlissHidden" Selected="no" />
+     <SelectableItemCustomization Id="HelpHidden" Selected="no" />
+     <SelectableItemCustomization Id="LocalDBHidden" Selected="no" />
+     <SelectableItemCustomization Id="NetFX4Hidden" Selected="no" />
+     <SelectableItemCustomization Id="NetFX45Hidden" Selected="no" />
+     <SelectableItemCustomization Id="PortableDTPHidden" Selected="no" />
+     <SelectableItemCustomization Id="PreEmptiveDotfuscatorHidden" Selected="no" />
+     <SelectableItemCustomization Id="PreEmptiveAnalyticsHidden" Selected="no" />
+     <SelectableItemCustomization Id="ProfilerHidden" Selected="no" />
+     <SelectableItemCustomization Id="ReportingHidden" Selected="no" />
+     <SelectableItemCustomization Id="SDKTools3Hidden" Selected="no" />
+     <SelectableItemCustomization Id="SDKTools4Hidden" Selected="no" />
+     <SelectableItemCustomization Id="Silverlight5DRTHidden" Selected="no" />
+     <SelectableItemCustomization Id="SQLCEHidden" Selected="no" />
+     <SelectableItemCustomization Id="SQLCLRTypesHidden" Selected="no" />
+     <SelectableItemCustomization Id="SQLDACHidden" Selected="no" />
+     <SelectableItemCustomization Id="SQLDOMHidden" Selected="no" />
+     <SelectableItemCustomization Id="SQLSharedManagementObjectsHidden" Selected="no" />
+     <SelectableItemCustomization Id="TSQLHidden" Selected="no" />
+     <SelectableItemCustomization Id="VCCompilerHidden" Selected="yes" />
+     <SelectableItemCustomization Id="VCCoreHidden" Selected="yes" />
+     <SelectableItemCustomization Id="VCDebugHidden" Selected="yes" />
+     <SelectableItemCustomization Id="VCDesigntimeHidden" Selected="yes" />
+     <SelectableItemCustomization Id="VCExtendedHidden" Selected="yes" />
+     <SelectableItemCustomization Id="WinJSHidden" Selected="no" />
+     <SelectableItemCustomization Id="WinSDKHidden" Selected="yes" />
+  </SelectableItemCustomizations>
+
+</AdminDeploymentCustomizations>

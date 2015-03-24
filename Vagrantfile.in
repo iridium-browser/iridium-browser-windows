@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "iridium-32bit" do |iridium32bit|
+    # Configuration to build 32bit version of iridium.
+
+    iridium32bit.vm.box = "opentable/win-8.1-core-amd64-nocm"
+
+    iridium32bit.vm.provision "shell", path: "scripts/windows/000_setup_powershell.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/010_install_visual_studio.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/020_install_depot_tools.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/021_check_depot_tools.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/040_initialize_gclient.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/060_sync_code.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/070_apply_patches.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/080_runhooks.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/100_compile_release.cmd", args: "x86"
+
+    # Wait for winrm responses for up to 2 hours.
+    config.winrm.timeout = 120*60
+
+    config.vm.provider "virtualbox" do |vb|
+      # You can get the Visual Studio Community 2013 Update 4 ISO image from
+      # https://www.visualstudio.com/de-de/downloads/download-visual-studio-vs#DownloadFamilies_2
+      # http://download.microsoft.com/download/7/1/B/71BA74D8-B9A0-4E6C-9159-A8335D54437E/vs2013.4_ce_enu.iso
+      vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", "1", "--device", "0", "--type", "dvddrive", "--medium", "__VISUAL_STUDIO_ISO__"]
+    end
+  end
+
+  config.vm.network "private_network", type: "dhcp"
+
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine.
+    vb.gui = true
+
+    # I/O APIC must be enabled to support more than 1 cpu on 32bit systems.
+    # http://makandracards.com/jan0sch/24843-vagrant-virtualbox-32bit-systems-and-more-than-one-cpu
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+
+    # Needs at least 6 gigs memory for building and should use multiple cpus to
+    # speed up building.
+    vb.memory = 6144
+    vb.cpus = 8
+  end
+
+end
