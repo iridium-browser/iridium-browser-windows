@@ -4,7 +4,9 @@
 
 - Install [Vagrant](https://www.vagrantup.com).
 - Install [VirtualBox](https://www.virtualbox.org).
-- Run `bootstrap.sh`.
+- Run `bootstrap.sh`. This will download the Visual Studio Community 2013
+  Update 4 ISO image (about 7 GB), the Windows Vagrant box (about 3,6 GB)
+  and install the necessary Vagrant plugin.
 
 ## Setup
 
