@@ -11,7 +11,7 @@ if "%1" == "x64" (
     ninja -C src\out\Release mini_installer
 )
 
-echo "Copying compiled files..."
+echo Copying compiled files...
 
 set TODAY=
 for /f "skip=1" %%d in ('wmic os get localdatetime') do if not defined TODAY set TODAY=%%d
