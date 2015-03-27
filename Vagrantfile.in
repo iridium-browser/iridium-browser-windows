@@ -9,6 +9,7 @@ Vagrant.configure(2) do |config|
     iridium32bit.vm.box = "opentable/win-8.1-core-amd64-nocm"
 
     iridium32bit.vm.provision "shell", path: "scripts/windows/000_setup_powershell.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/001_disable_services.cmd", args: "x86"
     iridium32bit.vm.provision "shell", path: "scripts/windows/010_install_visual_studio.cmd", args: "x86"
     iridium32bit.vm.provision "shell", path: "scripts/windows/020_install_depot_tools.cmd", args: "x86"
     iridium32bit.vm.provision "shell", path: "scripts/windows/021_check_depot_tools.cmd", args: "x86"
