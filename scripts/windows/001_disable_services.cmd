@@ -1,3 +1,3 @@
 @echo off
 
-net stop wsearch
+net stop wsearch || set errorlevel = 0
