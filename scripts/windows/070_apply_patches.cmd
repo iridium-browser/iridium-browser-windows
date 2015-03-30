@@ -1,10 +1,14 @@
 @echo off
 rem Apply patches required for building
 
-cd develop/src
-echo Applying patches...
+if exist c:\vagrant\patches\windows\*.diff (
+    cd develop/src
+    echo Applying patches...
 
-for /f "tokens=*" %%s in ('dir /b c:\vagrant\patches\windows\*.diff ^| sort') do (
-    echo Applying %%s
-    call git apply --exclude="*.png" c:\vagrant\patches\windows\%%s
+    for /f "tokens=*" %%s in ('dir /b c:\vagrant\patches\windows\*.diff ^| sort') do (
+        echo Applying %%s
+        call git apply --exclude="*.png" c:\vagrant\patches\windows\%%s
+    )
+) else (
+    echo No patches found to apply.
 )
