@@ -2,6 +2,7 @@
 
 ## Prerequisites
 
+- Make sure you have at least 75 GB free disk space.
 - Install [Vagrant](https://www.vagrantup.com).
 - Install [VirtualBox](https://www.virtualbox.org).
 - Run `bootstrap.sh`. This will download the Visual Studio Community 2013
