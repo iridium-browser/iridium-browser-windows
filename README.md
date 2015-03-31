@@ -35,6 +35,9 @@ before compiling.
 
     guest$ c:\vagrant\scripts\windows\080_runhooks.cmd
 
+**IMPORTANT**: If you run `vagrant provision`, all local changes will be reset
+               and overwritten with the default iridium-browser patches!
+
 ## Build installer
 
 To compile the code and build a new installer, you can use one of the
