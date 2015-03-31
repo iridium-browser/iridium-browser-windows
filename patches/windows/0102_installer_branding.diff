@@ -1,0 +1,103 @@
+diff --git a/chrome/installer/mini_installer/mini_installer_constants.cc b/chrome/installer/mini_installer/mini_installer_constants.cc
+index 9a4f079..f5b95b8 100644
+--- a/chrome/installer/mini_installer/mini_installer_constants.cc
++++ b/chrome/installer/mini_installer/mini_installer_constants.cc
+@@ -40,7 +40,7 @@ const wchar_t kLZMAResourceType[] = L"B7";
+ const wchar_t kApRegistryValue[] = L"ap";
+ // The name of the value in kCleanupRegistryKey that tells the installer not to
+ // delete extracted files.
+-const wchar_t kCleanupRegistryValue[] = L"ChromeInstallerCleanup";
++const wchar_t kCleanupRegistryValue[] = L"IridiumInstallerCleanup";
+ // The name of an app's Client State registry value that holds the path to its
+ // uninstaller.
+ const wchar_t kUninstallRegistryValue[] = L"UninstallString";
+@@ -55,9 +55,9 @@ const wchar_t kCleanupRegistryKey[] =
+     L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome";
+ #else
+ // The path to the key containing each app's Client State registry key.
+-const wchar_t kClientStateKeyBase[] = L"Software\\Chromium";
++const wchar_t kClientStateKeyBase[] = L"Software\\Iridium";
+ // The path to the key in which kCleanupRegistryValue is found.
+-const wchar_t kCleanupRegistryKey[] = L"Software\\Chromium";
++const wchar_t kCleanupRegistryKey[] = L"Software\\Iridium";
+ #endif
+ 
+ // One gigabyte is the biggest resource size that it can handle.
+diff --git a/chrome/installer/util/browser_distribution.cc b/chrome/installer/util/browser_distribution.cc
+index 77b119f..9e7a2b6 100644
+--- a/chrome/installer/util/browser_distribution.cc
++++ b/chrome/installer/util/browser_distribution.cc
+@@ -58,7 +58,7 @@ BrowserDistribution::Type GetCurrentDistributionType() {
+ BrowserDistribution::BrowserDistribution()
+     : type_(CHROME_BROWSER),
+       app_reg_data_(make_scoped_ptr(
+-          new NonUpdatingAppRegistrationData(L"Software\\Chromium"))) {
++          new NonUpdatingAppRegistrationData(L"Software\\Iridium"))) {
+ }
+ 
+ BrowserDistribution::BrowserDistribution(
+@@ -161,7 +161,7 @@ base::string16 BrowserDistribution::GetActiveSetupGuid() {
+ }
+ 
+ base::string16 BrowserDistribution::GetBaseAppName() {
+-  return L"Chromium";
++  return L"Iridium";
+ }
+ 
+ base::string16 BrowserDistribution::GetDisplayName() {
+@@ -209,27 +209,27 @@ base::string16 BrowserDistribution::GetStartMenuShortcutSubfolder(
+ }
+ 
+ base::string16 BrowserDistribution::GetBaseAppId() {
+-  return L"Chromium";
++  return L"Iridium";
+ }
+ 
+ base::string16 BrowserDistribution::GetBrowserProgIdPrefix() {
+   // This used to be "ChromiumHTML", but was forced to become "ChromiumHTM"
+   // because of http://crbug.com/153349.  See the declaration of this function
+   // in the header file for more details.
+-  return L"ChromiumHTM";
++  return L"IridiumHTML";
+ }
+ 
+ base::string16 BrowserDistribution::GetBrowserProgIdDesc() {
+-  return L"Chromium HTML Document";
++  return L"Iridium HTML Document";
+ }
+ 
+ 
+ base::string16 BrowserDistribution::GetInstallSubDir() {
+-  return L"Chromium";
++  return L"Iridium";
+ }
+ 
+ base::string16 BrowserDistribution::GetPublisherName() {
+-  return L"Chromium";
++  return L"Iridium";
+ }
+ 
+ base::string16 BrowserDistribution::GetAppDescription() {
+@@ -243,7 +243,7 @@ base::string16 BrowserDistribution::GetLongAppDescription() {
+ }
+ 
+ std::string BrowserDistribution::GetSafeBrowsingName() {
+-  return "chromium";
++  return "iridium";
+ }
+ 
+ std::string BrowserDistribution::GetNetworkStatsServer() const {
+@@ -255,11 +255,11 @@ base::string16 BrowserDistribution::GetDistributionData(HKEY root_key) {
+ }
+ 
+ base::string16 BrowserDistribution::GetUninstallLinkName() {
+-  return L"Uninstall Chromium";
++  return L"Uninstall Iridium";
+ }
+ 
+ base::string16 BrowserDistribution::GetUninstallRegPath() {
+-  return L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Chromium";
++  return L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Iridium";
+ }
+ 
+ BrowserDistribution::DefaultBrowserControlPolicy
