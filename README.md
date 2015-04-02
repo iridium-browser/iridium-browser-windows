@@ -8,6 +8,9 @@
 - Run `bootstrap.sh`. This will download the Visual Studio Community 2013
   Update 4 ISO image (about 7 GB), the Windows Vagrant box (about 3.6 GB)
   and install the necessary Vagrant plugin.
+- Currently supported host systems for `bootstrap.sh` are Linux and OSX.
+  For Windows, the dependencies must be downloaded / installed manually
+  and the `Vagrantfile` created from `Vagrantfile.in`.
 
 ## Setup
 
