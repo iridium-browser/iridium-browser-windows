@@ -30,12 +30,12 @@ VISUAL_STUDIO_URL=http://download.microsoft.com/download/7/1/B/71BA74D8-B9A0-4E6
 
 if [ ! -f "${VISUAL_STUDIO_ISO}" ]; then
     echo "Downloading Visual Studio Community 2013 Update 4 ISO, this may take a while..."
-    wget -O "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
+    curl -L -o "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
 else
     echo "Checking available Visual Studio Community 2013 Update 4 ISO..."
     if ! sha256sum -c --status vs2013.4_ce_enu.iso.sha256; then
         echo "Continuing download of Visual Studio Community 2013 Update 4 ISO, this may take a while..."
-        wget --continue -O "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
+        curl -C - -L -o "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
     fi
 fi
 
