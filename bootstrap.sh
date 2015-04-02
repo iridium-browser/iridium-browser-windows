@@ -6,6 +6,12 @@ command -v vagrant >/dev/null 2>&1 || {
     exit 1;
 }
 
+SHA256SUM=sha256sum
+command -v ${SHA256SUM} >/dev/null 2>&1 || {
+    # OSX doesn't provide a "sha256sum" binary
+    SHA256SUM="shasum -a 256"
+}
+
 realpath() {
     OURPWD=$PWD
     cd "$(dirname "$1")"
@@ -33,7 +39,7 @@ if [ ! -f "${VISUAL_STUDIO_ISO}" ]; then
     curl -L -o "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
 else
     echo "Checking available Visual Studio Community 2013 Update 4 ISO..."
-    if ! sha256sum -c --status vs2013.4_ce_enu.iso.sha256; then
+    if ! ${SHA256SUM} -c --status vs2013.4_ce_enu.iso.sha256; then
         echo "Continuing download of Visual Studio Community 2013 Update 4 ISO, this may take a while..."
         curl -C - -L -o "${VISUAL_STUDIO_ISO}" "${VISUAL_STUDIO_URL}"
     fi
