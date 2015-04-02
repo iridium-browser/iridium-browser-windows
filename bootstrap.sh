@@ -6,8 +6,25 @@ command -v vagrant >/dev/null 2>&1 || {
     exit 1;
 }
 
+realpath() {
+    OURPWD=$PWD
+    cd "$(dirname "$1")"
+    LINK=$(readlink "$(basename "$1")")
+    while [ "$LINK" ]; do
+        cd "$(dirname "$LINK")"
+        LINK=$(readlink "$(basename "$1")")
+    done
+    REALPATH="$PWD/$(basename "$1")"
+    cd "$OURPWD"
+    echo "$REALPATH"
+}
+
 ROOT=$(dirname "${BASH_SOURCE[0]}")
-ROOT=$(readlink -f "${ROOT}")
+if [ "${ROOT}" = "." ]; then
+    ROOT=
+fi
+ROOT=$(realpath "${ROOT}")
+
 VISUAL_STUDIO_ISO="${ROOT}/vs2013.4_ce_enu.iso"
 VISUAL_STUDIO_URL=http://download.microsoft.com/download/7/1/B/71BA74D8-B9A0-4E6C-9159-A8335D54437E/vs2013.4_ce_enu.iso
 
