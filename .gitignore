@@ -1,5 +1,12 @@
 .vagrant
 .ccache
+*.wixobj
+*.wixpdb
 build_result
 vs2013.4_ce_enu.iso
 Vagrantfile
+/scripts/windows/msi/iridium-files.wxs
+/scripts/windows/msi/wix39-binaries.zip
+
+/scripts/windows/msi/chrome-source/
+/scripts/windows/msi/wix39-binaries/

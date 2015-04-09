@@ -18,6 +18,7 @@ Vagrant.configure(2) do |config|
     iridium32bit.vm.provision "shell", path: "scripts/windows/070_apply_patches.cmd", args: "x86"
     iridium32bit.vm.provision "shell", path: "scripts/windows/080_runhooks.cmd", args: "x86"
     iridium32bit.vm.provision "shell", path: "scripts/windows/100_compile_release.cmd", args: "x86"
+    iridium32bit.vm.provision "shell", path: "scripts/windows/110_build_msi_installer.cmd", args: "x86"
 
     # Wait for winrm responses for up to 2 hours.
     config.winrm.timeout = 120*60

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product
+        Name="Iridium Browser $(var.Version)"
+        Id="*"
+        UpgradeCode="B73025EE-6E45-41CE-9E20-C268BD1566E2"
+        Language="1033"
+        Codepage="1252"
+        Version="$(var.Version)"
+        Manufacturer="The Iridium Authors">
+        <Package
+            Id="*"
+            Keywords="Installer"
+            Description="Iridium Secure Browser $(var.Version) Installer"
+            Manufacturer="The Iridium Authors"
+            InstallerVersion="100"
+            Languages="1033"
+            Compressed="yes"
+            InstallScope="perUser"
+            InstallPrivileges="limited"
+            SummaryCodepage="1252" />
+
+        <MajorUpgrade
+            DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+        <Media Id="1" Cabinet="iridiumbrowser.cab" EmbedCab="yes" />
+        <Property Id="DiskPrompt" Value="Iridium Browser $(var.Version) Installation [1]" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles">
+                <Directory Id="INSTALLDIR" Name="Iridium">
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="Iridium Browser"/>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="chrome.exe" Guid="*">
+                <File Id="chrome.exe" KeyPath="yes" Source="$(var.SourceRoot)\chrome.exe">
+                    <Shortcut Id="ApplicationStartMenuShortcut"
+                              Directory="ApplicationProgramsFolder"
+                              Advertise="yes"
+                              Name="Iridium Browser $(var.Version)"
+                              Description="Start Iridium Secure Browser $(var.Version)"
+                              WorkingDirectory="INSTALLDIR"
+                              Icon="Icon.exe">
+                        <Icon Id="Icon.exe" SourceFile="$(var.SourceRoot)\chrome.exe" />
+                    </Shortcut>
+                </File>
+                <RemoveFile Id="RemoveDebugLog" Name="debug.log" On="uninstall" />
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="15104278-29FC-46C7-855F-84A46DF64158">
+                <Shortcut Id="UninstallProduct"
+                          Name="Uninstall Iridium Browser"
+                          Description="Uninstalls Iridium Secure Browser"
+                          Target="[System64Folder]msiexec.exe"
+                          Arguments="/x [ProductCode]"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Iridium Browser" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+           </Component>
+        </DirectoryRef>
+
+        <Feature Id="Complete" Title="Iridium $(var.Version)" Description="The complete package." Display="expand" Level="1" AllowAdvertise="yes" ConfigurableDirectory="INSTALLDIR">
+            <Feature Id="IridiumApp" Title="Program" Description="The main executable." Level="1">
+                <ComponentGroupRef Id="IridiumFiles" />
+                <ComponentRef Id="chrome.exe" />
+                <ComponentRef Id="ApplicationShortcut" />
+            </Feature>
+        </Feature>
+
+        <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Iridium Browser" />
+        <Property Id="WixShellExecTarget" Value="[#chrome.exe]" />
+        <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+
+        <UI Id="InstallerUI">
+            <UIRef Id="WixUI_InstallDir" />
+            <UIRef Id="WixUI_ErrorProgressText" />
+            <!-- we don't display a license for now -->
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="3">1</Publish>
+            <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="3">1</Publish>
+            <!-- optionally run iridium on exit -->
+            <Publish Dialog="ExitDialog"
+                     Control="Finish"
+                     Event="DoAction"
+                     Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+        </UI>
+    </Product>
+</Wix>
