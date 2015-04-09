@@ -1,7 +1,7 @@
 @echo off
 rem Checkout source code
 
-set CHROMIUM_VERSION=40.0.2214.111
+set CHROMIUM_VERSION=41.0.2272.118
 set RELEASE_BRANCH=iridium_release_branch
 
 cd develop/src

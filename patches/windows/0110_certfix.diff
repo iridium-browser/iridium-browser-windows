@@ -1,0 +1,19 @@
+--- a/net/cert/ev_root_ca_metadata.cc
++++ b/net/cert/ev_root_ca_metadata.cc
+@@ -41,6 +41,16 @@
+ };
+ 
+ static const EVMetadata ev_root_ca_metadata[] = {
++  // need some dummy thing to make compiler happy, because
++  // arraysize() is implemented as a convoluted template rather than
++  // the traditional sizeof(x)/sizeof(*x)
++  { { { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
++        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff } },
++    {
++      "0",
++    }
++  },
++
+ #if 0
+   // AC Camerfirma S.A. Chambers of Commerce Root - 2008
+   // https://www.camerfirma.com
