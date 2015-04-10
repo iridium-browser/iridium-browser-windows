@@ -31,7 +31,7 @@ After you did some changes to the code, you can login to the virtual machine and
 trigger compilation.
 
     host$ vagrant ssh
-    guest$ ninja -C develop/src/out/Release chrome
+    guest$ c:\vagrant\scripts\windows\100_compile_release.cmd
 
 If you also modified `.gyp` files, you will have to recreate the build scripts
 before compiling.
@@ -43,11 +43,19 @@ before compiling.
 
 ## Build installer
 
-To compile the code and build a new installer, you can use one of the
-provisioning scripts:
+To build a new installer, you can use one of the provisioning scripts:
 
     host$ vagrant ssh
-    guest$ c:\vagrant\scripts\windows\100_compile_release.cmd
+    guest$ c:\vagrant\scripts\windows\110_build_msi_installer.cmd
+
+## Code signing
+
+During the build process of the MSI installer, the included files (and the
+installer itself) can optionally be signed.
+
+To enable this, put your codesigning certificate as `codesign-certificate.spc`
+and your private key as `codesign-key.pvk` in the vagrant root folder (next
+to the `Vagrantfile`).
 
 ## Troubleshooting
 

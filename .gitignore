@@ -3,6 +3,8 @@
 *.wixobj
 *.wixpdb
 build_result
+codesign-certificate.spc
+codesign-key.pvk
 vs2013.4_ce_enu.iso
 Vagrantfile
 /scripts/windows/msi/iridium-files.wxs

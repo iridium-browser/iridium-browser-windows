@@ -62,6 +62,10 @@ if not exist "%SOURCE_ROOT%" (
     exit /b 1
 )
 
+if exist "%ROOT%\sign_files.cmd" (
+    call "%ROOT%\sign_files.cmd" "%ROOT%\chrome-source\Chrome-bin"
+)
+
 set COMMON_ARGS=-nologo -wx
 
 echo Generating file lists
@@ -83,4 +87,7 @@ echo Creating installer for version %VERSION%
 if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1
+)
+if exist "%ROOT%\sign_files.cmd" (
+    call "%ROOT%\sign_files.cmd" "%OUTPUT%"
 )
