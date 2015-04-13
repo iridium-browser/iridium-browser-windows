@@ -3,7 +3,7 @@ rem Build .msi installer
 
 cd "%HOME%\develop"
 
-set VERSION=41.1
+set VERSION=41.2
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%.msi
 
 call c:\vagrant\scripts\windows\msi\build_msi.cmd src\out\Release\chrome.7z "%VERSION%" "%OUTPUT%"
