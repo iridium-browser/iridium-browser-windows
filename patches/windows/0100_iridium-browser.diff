@@ -213,7 +213,7 @@ index 2057bac..86769fd 100755
        # This allows crash dumping to a file without uploading the
        # dump, for testing purposes.  Breakpad does not recognise
 diff --git a/chrome/VERSION b/chrome/VERSION
-index 3183355..fdf56ff 100644
+index 3183355..70ced78 100644
 --- a/chrome/VERSION
 +++ b/chrome/VERSION
 @@ -1,4 +1,4 @@
@@ -221,7 +221,7 @@ index 3183355..fdf56ff 100644
 -MINOR=0
 -BUILD=2272
 -PATCH=118
-+MINOR=1
++MINOR=2
 +BUILD=0
 +PATCH=0
 diff --git a/chrome/app/app-Info.plist b/chrome/app/app-Info.plist
@@ -246,7 +246,7 @@ index b6fc276..a052564 100644
  </dict>
  </plist>
 diff --git a/chrome/app/chromium_strings.grd b/chrome/app/chromium_strings.grd
-index e498059..0d0137c 100644
+index e498059..b1decb6 100644
 --- a/chrome/app/chromium_strings.grd
 +++ b/chrome/app/chromium_strings.grd
 @@ -212,20 +212,20 @@ be available for now. -->
@@ -1311,34 +1311,16 @@ index e498059..0d0137c 100644
        </message>
  
        <!-- Upgrade recovery bubble -->
-@@ -1309,8 +1309,25 @@ Signing in anyway will merge Chromium information like bookmarks, history, and o
-       </message>
+@@ -1310,7 +1310,7 @@ Signing in anyway will merge Chromium information like bookmarks, history, and o
  
        <!-- SSL Interstitial V2 strings -->
-+      <if expr="is_android or is_ios">
-+        <message name="IDS_SSL_CLOCK_ERROR" desc="Paragraph explaining that the SSL interstitial is probably caused by an incorrect clock.">
-+          Iridium can't establish a private connection to &lt;strong&gt;<ph name="DOMAIN">$1<ex>paypal.com</ex></ph>&lt;/strong&gt;. This is probably because your device's date is set incorrectly. (Your device has the date set to <ph name="DATE">$2<ex>Jan 1, 1970</ex></ph>.) You should refresh this page after <ph name="BEGIN_LINK">&lt;a href="#" id="clock-link"&gt;</ph>you update your device's date and time<ph name="END_LINK">&lt;/a&gt;</ph>.
-+        </message>
-+        <message name="IDS_SSL_CLOCK_ERROR_EXPLANATION" desc="Body text for the explanation shown for when the computer's clock is wrong.">
-+        To establish a secure network connection, your device needs a correct clock. This is because the certificates websites use to identify themselves when establishing a secure connection are only valid for a specific time period. Since your device's clock is wrong, Iridium cannot properly check certificates.
-+        </message>
-+      </if>
-+      <if expr="not is_android and not is_ios">
-+        <message name="IDS_SSL_CLOCK_ERROR" desc="Paragraph explaining that the SSL interstitial is probably caused by an incorrect clock.">
-+          Iridium can't establish a private connection to &lt;strong&gt;<ph name="DOMAIN">$1<ex>paypal.com</ex></ph>&lt;/strong&gt;. This is probably because your computer's date is set incorrectly. (Your computer has the date set to <ph name="DATE">$2<ex>Jan 1, 1970</ex></ph>.) You should refresh this page after <ph name="BEGIN_LINK">&lt;a href="#" id="clock-link"&gt;</ph>you update your computer's date and time<ph name="END_LINK">&lt;/a&gt;</ph>.
-+        </message>
-+        <message name="IDS_SSL_CLOCK_ERROR_EXPLANATION" desc="Body text for the explanation shown for when the computer's clock is wrong.">
-+        To establish a secure network connection, your computer needs a correct clock. This is because the certificates websites use to identify themselves when establishing a secure connection are only valid for a specific time period. Since your computer's clock is wrong, Iridium cannot properly check certificates.
-+        </message>
-+      </if>
-+
        <message name="IDS_SSL_NONOVERRIDABLE_MORE_INVALID_SP3" desc="Body text for the explanation shown if the user clicks on the details windows, the certificate is invalid and the user has an old version of Windows (before WINDOWS XP SP3) running.">
 -      Your computer is running an old version of Microsoft Windows that cannot process this website's security certificate. Because of this problem, Chromium can't tell whether the certificate came from <ph name="SITE">$1<ex>google.com</ex></ph> or from someone on your network pretending to be <ph name="SITE">$1<ex>google.com</ex></ph>. Please update your computer to a more recent version of Windows.
 +      Your computer is running an old version of Microsoft Windows that cannot process this website's security certificate. Because of this problem, Iridium can't tell whether the certificate came from <ph name="SITE">$1<ex>google.com</ex></ph> or from someone on your network pretending to be <ph name="SITE">$1<ex>google.com</ex></ph>. Please update your computer to a more recent version of Windows.
        </message>
        <message name="IDS_SSL_NONOVERRIDABLE_MORE" desc="Body text for the explanation shown if user clicks on the Details button.">
          <ph name="SITE">$1<ex>google.com</ex></ph> normally uses encryption to protect your information. When Chromium tried to connect to <ph name="SITE">$1<ex>google.com</ex></ph> this time, the website sent back unusual
-@@ -1326,20 +1343,20 @@ and incorrect credentials. Either an attacker is trying to pretend to be <ph nam
+@@ -1326,20 +1326,20 @@ and incorrect credentials. Either an attacker is trying to pretend to be <ph nam
        <!-- Offline interstitial  -->
        <if expr="not is_android and not is_ios">
          <message name="IDS_ERRORPAGES_SUMMARY_INTERNET_DISCONNECTED" desc="Summary of the error page when the network connection failed. May be followed by platform dependent instructions.">
@@ -2263,7 +2245,7 @@ index 15bda18..9ea57ab 100644
  
  }  // namespace
 diff --git a/chrome/browser/component_updater/chrome_component_updater_configurator.cc b/chrome/browser/component_updater/chrome_component_updater_configurator.cc
-index efaa772..be3bf22 100644
+index efaa772..385669e 100644
 --- a/chrome/browser/component_updater/chrome_component_updater_configurator.cc
 +++ b/chrome/browser/component_updater/chrome_component_updater_configurator.cc
 @@ -47,16 +47,20 @@ extern const char kSwitchDisablePings[] = "disable-pings";
@@ -2295,7 +2277,7 @@ index efaa772..be3bf22 100644
    pings_enabled_ = !HasSwitchValue(switch_values, kSwitchDisablePings);
    deltas_enabled_ = !HasSwitchValue(switch_values, kSwitchDisableDeltaUpdates);
 +  fprintf(stderr, "%s: fast_update=%d pings_enabled=%d deltas_enabled=%d\n",
-+  	fast_update_, pings_enabled_, deltas_enabled_);
++  	__PRETTY_FUNCTION__, fast_update_, pings_enabled_, deltas_enabled_);
  
  #if defined(OS_WIN)
    background_downloads_enabled_ =
@@ -4579,7 +4561,7 @@ index 590aa85..e5e0489 100644
    return success;
  }
 diff --git a/content/common/user_agent.cc b/content/common/user_agent.cc
-index 1176c48..c2af41a 100644
+index 1176c48..254626a 100644
 --- a/content/common/user_agent.cc
 +++ b/content/common/user_agent.cc
 @@ -191,6 +191,8 @@ std::string BuildUserAgentFromOSAndProduct(const std::string& os_info,
@@ -4587,7 +4569,7 @@ index 1176c48..c2af41a 100644
        WEBKIT_VERSION_MAJOR,
        WEBKIT_VERSION_MINOR);
 +  if (strncmp(product.c_str(), "Iridium/", 8) == 0)
-+  	base::StringAppendF(&user_agent, " Chrome/40.0.2214.93");
++  	base::StringAppendF(&user_agent, " Chrome/41.0.2272.118");
    return user_agent;
  }
  
@@ -4811,18 +4793,28 @@ index cba37a4..29f233f 100644
    "text/csv",
    "text/tab-separated-values",
 diff --git a/net/cert/ev_root_ca_metadata.cc b/net/cert/ev_root_ca_metadata.cc
-index 74d88a8..d3b5432 100644
+index 74d88a8..473aa76 100644
 --- a/net/cert/ev_root_ca_metadata.cc
 +++ b/net/cert/ev_root_ca_metadata.cc
-@@ -41,6 +41,7 @@ struct EVMetadata {
+@@ -41,6 +41,17 @@ struct EVMetadata {
  };
  
  static const EVMetadata ev_root_ca_metadata[] = {
++  // need some dummy thing to make compiler happy, because
++  // arraysize() is implemented as a convoluted template rather than
++  // the traditional sizeof(x)/sizeof(*x)
++  { { { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
++        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff } },
++    {
++      "0",
++    }
++  },
++
 +#if 0
    // AC Camerfirma S.A. Chambers of Commerce Root - 2008
    // https://www.camerfirma.com
    { { { 0x78, 0x6a, 0x74, 0xac, 0x76, 0xab, 0x14, 0x7f, 0x9c, 0x6a,
-@@ -436,6 +437,7 @@ static const EVMetadata ev_root_ca_metadata[] = {
+@@ -436,6 +447,7 @@ static const EVMetadata ev_root_ca_metadata[] = {
          0xcf, 0x30, 0x54, 0xf3, 0x4c, 0x52, 0xb7, 0xe5, 0x58, 0xc6 } },
      {"2.16.840.1.114404.1.1.2.4.1", ""},
    }
