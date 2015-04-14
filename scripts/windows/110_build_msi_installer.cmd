@@ -1,7 +1,7 @@
 @echo off
 rem Build .msi installer
 
-cd "%HOME%\develop"
+cd develop
 
 set VERSION=41.2
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%.msi
