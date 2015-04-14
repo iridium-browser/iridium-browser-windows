@@ -79,3 +79,29 @@ to
     config.vm.network "private_network", ip: "1.2.3.4"
 
 where `1.2.3.4` is a local IP address that can be reached from your host.
+
+
+If you receive this error while starting the virtual machine from a remote
+ssh shell:
+```
+The guest machine entered an invalid state while waiting for it
+to boot. Valid states are 'starting, running'. The machine is in the
+'aborted' state. Please verify everything is configured
+properly and try again.
+
+If the provider you're using has a GUI that comes with it,
+it is often helpful to open that and watch the machine, since the
+GUI often has more helpful error messages than Vagrant can retrieve.
+For example, if you're using VirtualBox, run `vagrant up` while the
+VirtualBox GUI is open.
+```
+
+the headless mode must be activated in `Vagrantfile` by changing
+
+    vb.gui = true
+
+to
+
+    vb.gui = false
+
+You can restart with `vagrant up` afterwards.
