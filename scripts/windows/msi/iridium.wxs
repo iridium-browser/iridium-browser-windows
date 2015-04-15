@@ -37,8 +37,8 @@
         </Directory>
 
         <DirectoryRef Id="INSTALLDIR">
-            <Component Id="chrome.exe" Guid="*">
-                <File Id="chrome.exe" KeyPath="yes" Source="$(var.SourceRoot)\chrome.exe">
+            <Component Id="iridium.exe" Guid="*">
+                <File Id="iridium.exe" KeyPath="yes" Source="$(var.SourceRoot)\chrome.exe">
                     <Shortcut Id="ApplicationStartMenuShortcut"
                               Directory="ApplicationProgramsFolder"
                               Advertise="yes"
@@ -68,7 +68,7 @@
         <Feature Id="Complete" Title="Iridium $(var.Version)" Description="The complete package." Display="expand" Level="1" AllowAdvertise="yes" ConfigurableDirectory="INSTALLDIR">
             <Feature Id="IridiumApp" Title="Program" Description="The main executable." Level="1">
                 <ComponentGroupRef Id="IridiumFiles" />
-                <ComponentRef Id="chrome.exe" />
+                <ComponentRef Id="iridium.exe" />
                 <ComponentRef Id="ApplicationShortcut" />
             </Feature>
         </Feature>
@@ -78,7 +78,7 @@
         <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Iridium Browser" />
-        <Property Id="WixShellExecTarget" Value="[#chrome.exe]" />
+        <Property Id="WixShellExecTarget" Value="[#iridium.exe]" />
         <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 
         <UI Id="InstallerUI">
