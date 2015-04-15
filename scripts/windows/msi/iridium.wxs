@@ -14,7 +14,7 @@
             Description="Iridium Secure Browser $(var.Version) Installer"
             Manufacturer="The Iridium Authors"
             InstallerVersion="100"
-            Languages="1033"
+            Languages="1033,1031"
             Compressed="yes"
             InstallScope="perUser"
             InstallPrivileges="limited"
