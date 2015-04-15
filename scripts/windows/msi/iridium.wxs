@@ -20,6 +20,9 @@
             InstallPrivileges="limited"
             SummaryCodepage="1252" />
 
+        <Property Id="MSIINSTALLPERUSER" Value="1" />
+        <Property Id="ALLUSERS" Value="2" />
+
         <MajorUpgrade
             DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
 
