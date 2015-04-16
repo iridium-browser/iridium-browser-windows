@@ -1,8 +1,8 @@
 @echo off
 rem Apply patches required for building
 
+cd develop/src
 if exist c:\vagrant\patches\windows\*.diff (
-    cd develop/src
     echo Applying patches...
 
     for /f "tokens=*" %%s in ('dir /b c:\vagrant\patches\windows\*.diff ^| sort') do (
@@ -12,3 +12,6 @@ if exist c:\vagrant\patches\windows\*.diff (
 ) else (
     echo No patches found to apply.
 )
+
+echo Exchanging chromium.ico
+copy /y c:\vagrant\scripts\windows\iridium.ico chrome/app/theme/chromium/win/chromium.ico >NUL
