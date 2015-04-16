@@ -62,7 +62,7 @@ set LANG=%1
 set CULTURE=%2
 set LANGCODE=%3
 echo Compiling installer for language %LANG% (%LANGCODE%)
-"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -o "%MSI_TEMP_FOLDER%\output_%LANG%.msi" -cultures:"%CULTURE%" "%ROOT%\iridium.wixobj" "%ROOT%\iridium-files.wixobj"
+"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -o "%MSI_TEMP_FOLDER%\output_%LANG%.msi" -cultures:"%CULTURE%" "%ROOT%\iridium.wixobj" -loc "%ROOT%\iridium.%CULTURE%.wxl" "%ROOT%\iridium-files.wixobj"
 if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1
@@ -126,7 +126,7 @@ mkdir "%MSI_TEMP_FOLDER%"
 set MSI_TEMP=%MSI_TEMP_FOLDER%\output.msi
 
 echo Creating base installer for version %VERSION%
-"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -o "%MSI_TEMP%" "%ROOT%\iridium.wixobj" "%ROOT%\iridium-files.wixobj"
+"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -cultures:en-us -loc "%ROOT%\iridium.en-us.wxl" -o "%MSI_TEMP%" "%ROOT%\iridium.wixobj" "%ROOT%\iridium-files.wixobj"
 if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1
