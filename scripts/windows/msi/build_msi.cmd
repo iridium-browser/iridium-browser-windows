@@ -96,8 +96,9 @@ if not exist "%SOURCE_ROOT%" (
     exit /b 1
 )
 
+move "%SOURCE_ROOT%\chrome.exe" "%SOURCE_ROOT%\iridium.exe" >NUL
 if exist "%ROOT%\sign_files.cmd" (
-    call "%ROOT%\sign_files.cmd" "%ROOT%\chrome-source\Chrome-bin"
+    call "%ROOT%\sign_files.cmd" "%SOURCE_ROOT%"
 )
 
 set COMMON_ARGS=-nologo -wx
@@ -127,7 +128,7 @@ call :compilelang en en-us 1033
 call :compilelang de de-de 1031
 
 rem Store additional languages in base installer (English)
-copy /y "%MSI_TEMP%\output_en.msi" "%OUTPUT%" >NUL
+copy /y "%MSI_TEMP_FOLDER%\output_en.msi" "%OUTPUT%" >NUL
 call :preparelang "%MSI_TEMP_FOLDER%\output" "%OUTPUT%" de 1031
 
 if exist "%ROOT%\sign_files.cmd" (

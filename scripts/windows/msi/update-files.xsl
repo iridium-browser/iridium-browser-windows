@@ -9,7 +9,7 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="wix:Component[wix:File/@Source = '$(var.SourceRoot)\chrome.exe']">
-        <!-- we're including the chrome.exe manually so we can easily add a shortcut for it-->
+    <xsl:template match="wix:Component[wix:File/@Source = '$(var.SourceRoot)\iridium.exe']">
+        <!-- we're including the iridium.exe manually so we can easily add a shortcut for it-->
     </xsl:template>
 </xsl:stylesheet>

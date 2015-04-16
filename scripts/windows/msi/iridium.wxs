@@ -43,7 +43,7 @@
 
         <DirectoryRef Id="INSTALLDIR">
             <Component Id="iridium.exe" Guid="*">
-                <File Id="iridium.exe" KeyPath="yes" Source="$(var.SourceRoot)\chrome.exe">
+                <File Id="iridium.exe" KeyPath="yes" Source="$(var.SourceRoot)\iridium.exe">
                     <Shortcut Id="ApplicationStartMenuShortcut"
                               Directory="ApplicationProgramsFolder"
                               Advertise="yes"
@@ -51,7 +51,7 @@
                               Description="!(loc.Iridium_ShortcutDescription)"
                               WorkingDirectory="INSTALLDIR"
                               Icon="Icon.exe">
-                        <Icon Id="Icon.exe" SourceFile="$(var.SourceRoot)\chrome.exe" />
+                        <Icon Id="Icon.exe" SourceFile="$(var.SourceRoot)\iridium.exe" />
                     </Shortcut>
                 </File>
                 <RemoveFile Id="RemoveDebugLog" Name="debug.log" On="uninstall" />
