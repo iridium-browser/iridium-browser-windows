@@ -4,13 +4,13 @@
   <String Id="Iridium_DowngradeErrorMessage" Overridable="yes">Eine neuere Version des [ProductName] ist bereits installiert. Setup wird sich jetzt beenden.</String>
   <String Id="Iridium_InstallFolder" Overridable="yes">Iridium</String>
   <String Id="Iridium_MenuFolder" Overridable="yes">Iridium Browser</String>
-  <String Id="Iridium_FeatureTitle" Overridable="yes">Iridium Browser [Iridium_Version]</String>
+  <String Id="Iridium_FeatureTitle" Overridable="yes">Iridium Browser</String>
   <String Id="Iridium_FeatureDescription" Overridable="yes">Das gesamte Paket.</String>
   <String Id="Iridium_FeatureIridiumTitle" Overridable="yes">Anwendung</String>
   <String Id="Iridium_FeatureIridiumDescription" Overridable="yes">Die Iridium Browser Anwendung.</String>
-  <String Id="Iridium_ShortcutName" Overridable="yes">Iridium Browser [Iridium_Version]</String>
-  <String Id="Iridium_ShortcutDescription" Overridable="yes">Iridium Secure Browser [Iridium_Version] starten</String>
-  <String Id="Iridium_UninstallName" Overridable="yes">Iridium Browser [Iridium_Version] deinstallieren</String>
-  <String Id="Iridium_UninstallDescription" Overridable="yes">Entfernt den Iridium Secure Browser [Iridium_Version]</String>
+  <String Id="Iridium_ShortcutName" Overridable="yes">Iridium Browser</String>
+  <String Id="Iridium_ShortcutDescription" Overridable="yes">Iridium Secure Browser starten</String>
+  <String Id="Iridium_UninstallName" Overridable="yes">Iridium Browser deinstallieren</String>
+  <String Id="Iridium_UninstallDescription" Overridable="yes">Entfernt den Iridium Secure Browser</String>
   <String Id="Iridium_LaunchIridium" Overridable="yes">Iridium Browser starten</String>
 </WixLocalization>

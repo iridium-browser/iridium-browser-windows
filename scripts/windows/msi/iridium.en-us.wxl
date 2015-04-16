@@ -4,13 +4,13 @@
   <String Id="Iridium_DowngradeErrorMessage" Overridable="yes">A later version of [ProductName] is already installed. Setup will now exit.</String>
   <String Id="Iridium_InstallFolder" Overridable="yes">Iridium</String>
   <String Id="Iridium_MenuFolder" Overridable="yes">Iridium Browser</String>
-  <String Id="Iridium_FeatureTitle" Overridable="yes">Iridium Browser [Iridium_Version]</String>
+  <String Id="Iridium_FeatureTitle" Overridable="yes">Iridium Browser</String>
   <String Id="Iridium_FeatureDescription" Overridable="yes">The complete package.</String>
   <String Id="Iridium_FeatureIridiumTitle" Overridable="yes">Application</String>
   <String Id="Iridium_FeatureIridiumDescription" Overridable="yes">The Iridium Browser application.</String>
-  <String Id="Iridium_ShortcutName" Overridable="yes">Iridium Browser [Iridium_Version]</String>
-  <String Id="Iridium_ShortcutDescription" Overridable="yes">Start Iridium Secure Browser [Iridium_Version]</String>
-  <String Id="Iridium_UninstallName" Overridable="yes">Uninstall Iridium Browser [Iridium_Version]</String>
-  <String Id="Iridium_UninstallDescription" Overridable="yes">Uninstalls Iridium Secure Browser [Iridium_Version]</String>
+  <String Id="Iridium_ShortcutName" Overridable="yes">Iridium Browser</String>
+  <String Id="Iridium_ShortcutDescription" Overridable="yes">Start Iridium Secure Browser</String>
+  <String Id="Iridium_UninstallName" Overridable="yes">Uninstall Iridium Browser</String>
+  <String Id="Iridium_UninstallDescription" Overridable="yes">Uninstalls Iridium Secure Browser</String>
   <String Id="Iridium_LaunchIridium" Overridable="yes">Launch Iridium Browser</String>
 </WixLocalization>
