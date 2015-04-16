@@ -48,7 +48,7 @@ set LANG=%3
 set LANGCODE=%4
 echo Adding language %LANG% (%LANGCODE%) to base installer
 "%CSCRIPT%" "%ROOT%\WiLangId.vbs" "%MSINAME%_%LANG%.msi" Product "%LANGCODE%" > "%MSINAME%_%LANG%_transform.txt"
-"%MSITRAN%" -g "%MSINAME%.msi" "%MSINAME%_%LANG%.msi" "%MSINAME%_%LANG%.mst" >> "%MSINAME%_%LANG%_transform.txt"
+"%MSITRAN%" -g "%MSINAME%_en.msi" "%MSINAME%_%LANG%.msi" "%MSINAME%_%LANG%.mst" >> "%MSINAME%_%LANG%_transform.txt"
 "%CSCRIPT%" "%ROOT%\WiSubStg.vbs" "%OUTPUT%" "%MSINAME%_%LANG%.mst" "%LANGCODE%" >> "%MSINAME%_%LANG%_transform.txt"
 "%CSCRIPT%" "%ROOT%\WiSubStg.vbs" "%OUTPUT%" >> "%MSINAME%_%LANG%_transform.txt"
 endlocal
@@ -67,8 +67,6 @@ if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1
 )
-
-call :preparelang "%MSI_TEMP_FOLDER%\output" "%OUTPUT%" "%LANG%" "%LANGCODE%"
 endlocal
 goto :eof
 
@@ -123,17 +121,14 @@ if exist "%MSI_TEMP_FOLDER%" (
     rmdir /s /q "%MSI_TEMP_FOLDER%" > NUL
 )
 mkdir "%MSI_TEMP_FOLDER%"
-set MSI_TEMP=%MSI_TEMP_FOLDER%\output.msi
 
-echo Creating base installer for version %VERSION%
-"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -cultures:en-us -loc "%ROOT%\iridium.en-us.wxl" -o "%MSI_TEMP%" "%ROOT%\iridium.wixobj" "%ROOT%\iridium-files.wixobj"
-if not %errorlevel% == 0 (
-    echo Failed, please check errors above
-    exit /b 1
-)
-copy /y "%MSI_TEMP%" "%OUTPUT%" >NUL
-
+rem Build installers for all our different languages
+call :compilelang en en-us 1033
 call :compilelang de de-de 1031
+
+rem Store additional languages in base installer (English)
+copy /y "%MSI_TEMP%\output_en.msi" "%OUTPUT%" >NUL
+call :preparelang "%MSI_TEMP_FOLDER%\output" "%OUTPUT%" de 1031
 
 if exist "%ROOT%\sign_files.cmd" (
     call "%ROOT%\sign_files.cmd" "%OUTPUT%"
