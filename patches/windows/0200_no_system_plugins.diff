@@ -1,0 +1,42 @@
+diff --git a/content/common/plugin_list_win.cc b/content/common/plugin_list_win.cc
+index ccc994b..b4074ef 100644
+--- a/content/common/plugin_list_win.cc
++++ b/content/common/plugin_list_win.cc
+@@ -314,18 +314,7 @@ void PluginList::GetPluginDirectories(
+   // Load from the executable area
+   GetExeDirectory(&dirs);
+ 
+-  // Load Java
+-  GetJavaDirectory(&dirs);
+-
+-  // Load firefox plugins too.  This is mainly to try to locate
+-  // a pre-installed Flash player.
+-  GetFirefoxDirectory(&dirs);
+-
+-  // Firefox hard-codes the paths of some popular plugins to ensure that
+-  // the plugins are found.  We are going to copy this as well.
+-  GetAcrobatDirectory(&dirs);
+-  GetQuicktimeDirectory(&dirs);
+-  GetWindowsMediaDirectory(&dirs);
++  // NOTE: iridium doesn't load any system-provided plugins
+ 
+   for (std::set<base::FilePath>::iterator i = dirs.begin(); i != dirs.end(); ++i)
+     plugin_dirs->push_back(*i);
+@@ -362,16 +351,7 @@ void PluginList::GetPluginPathsFromRegistry(
+ 
+   std::set<base::FilePath> plugin_dirs;
+ 
+-  // Search for plugins from HKCU and HKLM.  THis will only find plugins that
+-  // are correctly registered in the correct WOW64 registry hive.
+-  GetPluginsInRegistryDirectory(HKEY_CURRENT_USER,
+-                                kRegistryMozillaPlugins,
+-                                0,
+-                                &plugin_dirs);
+-  GetPluginsInRegistryDirectory(HKEY_LOCAL_MACHINE,
+-                                kRegistryMozillaPlugins,
+-                                0,
+-                                &plugin_dirs);
++  // NOTE: iridium doesn't load any system-provided plugins
+ 
+   for (std::set<base::FilePath>::iterator i = plugin_dirs.begin();
+        i != plugin_dirs.end(); ++i) {
