@@ -23,4 +23,4 @@ if not %errorlevel% == 0 (
 )
 
 echo Syncing source code...
-call gclient sync --with_branch_heads --nohooks
+call gclient sync --with_branch_heads --reset --nohooks
