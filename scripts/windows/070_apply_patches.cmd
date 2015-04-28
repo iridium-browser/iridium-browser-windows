@@ -14,4 +14,4 @@ if exist c:\vagrant\patches\windows\*.diff (
 )
 
 echo Exchanging chromium.ico
-copy /y c:\vagrant\scripts\windows\iridium.ico chrome/app/theme/chromium/win/chromium.ico >NUL
+copy /y c:\vagrant\scripts\windows\iridium.ico chrome\app\theme\chromium\win\chromium.ico >NUL
