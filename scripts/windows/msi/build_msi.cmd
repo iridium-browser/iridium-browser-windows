@@ -23,7 +23,7 @@ if not exist "%SOURCE_FILE%" (
 
 set VERSION=%2
 if "%VERSION%" == "" (
-    set VERSION=0.0
+    set VERSION=0.0.0
 )
 
 set OUTPUT=%3
