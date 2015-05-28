@@ -1,0 +1,41 @@
+diff --git a/content/browser/browser_url_handler_impl.cc b/content/browser/browser_url_handler_impl.cc
+index e9178d8..a5225f9 100644
+--- a/content/browser/browser_url_handler_impl.cc
++++ b/content/browser/browser_url_handler_impl.cc
+@@ -28,8 +28,8 @@ static bool handle_trace_scheme(GURL *url, BrowserContext *)
+ 	 * (unless you manually enter a trk: URL). Leave it in, maybe it does
+ 	 * happen again.
+ 	 */
+-	const char *xhi    = tty ? "\e[1;32;45m" : ""; // ]
+-	const char *xreset = tty ? "\e[0m" : ""; // ]
++	const char *xhi    = tty ? "\033[1;32;45m" : ""; // ]
++	const char *xreset = tty ? "\033[0m" : ""; // ]
+ 	fprintf(stderr, "%s*** handle_trace_scheme(%s)%s\n",
+ 	        xhi, url->possibly_invalid_spec().c_str(), xreset);
+ 	if (net::ui_alert_trace_func != NULL)
+diff --git a/net/url_request/url_request.cc b/net/url_request/url_request.cc
+index 1f0c147..e1cda2a 100644
+--- a/net/url_request/url_request.cc
++++ b/net/url_request/url_request.cc
+@@ -556,13 +556,16 @@ URLRequest::URLRequest(const GURL& url,
+ 
+ #ifdef __linux__
+ 	bool tty = isatty(fileno(stderr));
++  const char *xred   = tty ? "\e[1;37;41m" : ""; // ]
++  const char *xfruit = tty ? "\e[33m" : ""; // ]
++  const char *xdark  = tty ? "\e[1;30m" : ""; // ]
++  const char *xreset = tty ? "\e[0m" : ""; //]
+ #else
+-	bool tty = false;
++  const char *xred   = "";
++  const char *xfruit = "";
++  const char *xdark  = "";
++  const char *xreset = "";
+ #endif
+-	const char *xred   = tty ? "\e[1;37;41m" : ""; // ]
+-	const char *xfruit = tty ? "\e[33m" : ""; // ]
+-	const char *xdark  = tty ? "\e[1;30m" : ""; // ]
+-	const char *xreset = tty ? "\e[0m" : ""; //]
+ 	if (url.scheme() == url::kTraceScheme) {
+ 		fprintf(stderr, "%s*** URLRequest(%s)%s\n",
+ 			xred, url.possibly_invalid_spec().c_str(), xreset);
