@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product
         Name="Iridium Browser $(var.Version)"
-        Id="940E7B28-BE2D-47FC-8BDD-3A69B69D8E10"
+        Id="*"
         UpgradeCode="B73025EE-6E45-41CE-9E20-C268BD1566E2"
         Language="1033"
         Codepage="1252"
