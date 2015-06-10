@@ -5,8 +5,14 @@ cd develop
 
 if "%1" == "x64" (
     echo Compiling 64bit installer...
-    ninja -C src\out\Release_x64 chrome.7z
+    set RELEASE_FOLDER=src\out\Release_x64
 ) else (
     echo Compiling 32bit installer...
-    ninja -C src\out\Release chrome.7z
+    set RELEASE_FOLDER=src\out\Release
 )
+
+rem Need to delete old manifest files so they are not included in the installer
+if exist %RELEASE_FOLDER%\*.manifest (
+    del /q %RELEASE_FOLDER%\*.manifest
+)
+ninja -C %RELEASE_FOLDER% chrome.7z
