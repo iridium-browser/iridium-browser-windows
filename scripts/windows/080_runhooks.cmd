@@ -15,11 +15,6 @@ rem Ignore macro redefinitions for now, will get fixed upstream in iridium-brows
 set CFLAGS=%CFLAGS% /wd4005
 set CXXFLAGS=%CXXFLAGS% /wd4005
 
-rem Link the browser into "chrome.dll" only instead of splitting up in
-rem "chrome.dll" and "chrome_child.dll". This fixes a linker issue with finding
-rem "chrome::ui_show_trace_alert" from "chrome_main.cc".
-set GYP_DEFINES=%GYP_DEFINES% chrome_multiple_dll=0
-
 cd develop/src
 
 echo Executing gclient hooks...
