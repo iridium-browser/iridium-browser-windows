@@ -31,6 +31,8 @@ if "%OUTPUT%" == "" (
     set OUTPUT="%ROOT%\iridiumbrowser-%VERSION%.msi"
 )
 
+set FFMPEG=%4
+
 goto main
 
 rem function :extract filename destination
@@ -62,7 +64,7 @@ set LANG=%1
 set CULTURE=%2
 set LANGCODE=%3
 echo Compiling installer for language %LANG% (%LANGCODE%)
-"%CMD_LIGHT%" %COMMON_ARGS% -ext WixUIExtension -ext WixUtilExtension -o "%MSI_TEMP_FOLDER%\output_%LANG%.msi" -cultures:"%CULTURE%" "%ROOT%\iridium.wixobj" -loc "%ROOT%\iridium.%CULTURE%.wxl" "%ROOT%\iridium-files.wixobj"
+"%CMD_LIGHT%" %COMMON_ARGS% -sice:ICE61 -ext WixUIExtension -ext WixUtilExtension -o "%MSI_TEMP_FOLDER%\output_%LANG%.msi" -cultures:"%CULTURE%" "%ROOT%\iridium.wixobj" -loc "%ROOT%\iridium.%CULTURE%.wxl" "%ROOT%\iridium-files.wixobj"
 if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1
@@ -94,6 +96,13 @@ set SOURCE_ROOT=%ROOT%\chrome-source\Chrome-bin
 if not exist "%SOURCE_ROOT%" (
     echo Source file did not contain folder "Chrome-bin", please check
     exit /b 1
+)
+
+if not "%FFMPEG%" == "" (
+    for /D %%s in ("%SOURCE_ROOT%\*") do (
+        echo Using %FFMPEG% as FFmpeg library %%s\ffmpegsumo.dll
+        copy /y "%FFMPEG%" "%%s\ffmpegsumo.dll" >NUL
+    )
 )
 
 move "%SOURCE_ROOT%\chrome.exe" "%SOURCE_ROOT%\iridium.exe" >NUL

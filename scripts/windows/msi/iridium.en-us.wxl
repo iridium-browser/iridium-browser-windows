@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WixLocalization Culture="en-us" Codepage="1252" xmlns="http://schemas.microsoft.com/wix/2006/localization">
   <String Id="Iridium_DiskPrompt" Overridable="yes">Iridium Browser [Iridium_Version] Installation [1]</String>
-  <String Id="Iridium_DowngradeErrorMessage" Overridable="yes">A later version of [ProductName] is already installed. Setup will now exit.</String>
   <String Id="Iridium_InstallFolder" Overridable="yes">Iridium</String>
   <String Id="Iridium_MenuFolder" Overridable="yes">Iridium Browser</String>
   <String Id="Iridium_FeatureTitle" Overridable="yes">Iridium Browser</String>
