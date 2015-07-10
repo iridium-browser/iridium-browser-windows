@@ -78,15 +78,6 @@ index 77b119f..9e7a2b6 100644
  }
  
  base::string16 BrowserDistribution::GetAppDescription() {
-@@ -243,7 +243,7 @@ base::string16 BrowserDistribution::GetLongAppDescription() {
- }
- 
- std::string BrowserDistribution::GetSafeBrowsingName() {
--  return "chromium";
-+  return "iridium";
- }
- 
- std::string BrowserDistribution::GetNetworkStatsServer() const {
 @@ -255,11 +255,11 @@ base::string16 BrowserDistribution::GetDistributionData(HKEY root_key) {
  }
  
