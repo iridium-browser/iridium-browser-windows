@@ -1,4 +1,5 @@
 @echo off
+setlocal
 rem Execute gclient hooks
 
 if "%1" == "x64" (

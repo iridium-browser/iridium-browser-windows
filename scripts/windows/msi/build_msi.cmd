@@ -1,4 +1,5 @@
 @echo off
+setlocal
 rem Determine root folder of script (without trailing backslash)
 set ROOT=%~dp0
 set ROOT=%ROOT:~0,-1%

@@ -1,4 +1,5 @@
 @echo off
+setlocal
 rem Build .msi installer
 
 cd develop

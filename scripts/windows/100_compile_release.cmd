@@ -1,4 +1,5 @@
 @echo off
+setlocal
 rem Compile release distribution packages
 
 cd develop
