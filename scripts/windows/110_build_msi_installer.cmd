@@ -4,7 +4,7 @@ rem Build .msi installer
 
 cd develop
 
-set VERSION=43.5.0
+set VERSION=43.8.0
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%.msi
 
 call c:\vagrant\scripts\windows\msi\build_msi.cmd src\out\Release\chrome.7z "%VERSION%" "%OUTPUT%" src\out\Release\ffmpegsumo-free.dll

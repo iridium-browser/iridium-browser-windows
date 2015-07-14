@@ -77,20 +77,6 @@
  #endif
  }
  
---- a/base/logging.h
-+++ b/base/logging.h
-@@ -912,6 +912,11 @@
- #define NOTIMPLEMENTED_MSG "NOT IMPLEMENTED"
- #endif
- 
-+#ifdef _MSC_VER
-+#	define __PRETTY_FUNCTION__ __FUNCSIG__
-+#	define __func__ __FUNCSIG__
-+#endif
-+
- #if NOTIMPLEMENTED_POLICY == 0
- #define NOTIMPLEMENTED() EAT_STREAM_PARAMETERS
- #elif NOTIMPLEMENTED_POLICY == 1
 --- a/base/mac/foundation_util.mm
 +++ b/base/mac/foundation_util.mm
 @@ -238,7 +238,7 @@
@@ -140,6 +126,15 @@
        # Notifications are compiled in by default. Set to 0 to disable.
        'notifications%' : 1,
  
+@@ -491,7 +494,7 @@
+       'enable_extensions%': 1,
+ 
+       # Enable Google Now.
+-      'enable_google_now%': 1,
++      'enable_google_now%': 0,
+ 
+       # Enable basic printing support and UI.
+       'enable_basic_printing%': 1,
 @@ -1150,6 +1153,7 @@
      'configuration_policy%': '<(configuration_policy)',
      'safe_browsing%': '<(safe_browsing)',
@@ -157,6 +152,17 @@
            }],
            # Official mac builds require a specific OS X SDK, but iOS and
            # non-official mac builds do not.
+--- a/build/config/features.gni
++++ b/build/config/features.gni
+@@ -69,7 +69,7 @@
+ 
+   enable_autofill_dialog = !is_ios
+ 
+-  enable_google_now = !is_ios && !is_android
++  enable_google_now = false
+ 
+   enable_one_click_signin = is_win || is_mac || (is_linux && !is_chromeos)
+ 
 --- a/build/mac/tweak_info_plist.py
 +++ b/build/mac/tweak_info_plist.py
 @@ -80,7 +80,7 @@
@@ -201,8 +207,8 @@
  MAJOR=43
 -MINOR=0
 -BUILD=2357
--PATCH=125
-+MINOR=5
+-PATCH=132
++MINOR=8
 +BUILD=0
 +PATCH=0
 --- a/chrome/android/java/strings/translations/android_chrome_strings_am.xtb
@@ -710,7 +716,7 @@
  
  #if defined(OS_WIN)
  #include "base/debug/dump_without_crashing.h"
-@@ -25,6 +29,17 @@
+@@ -25,6 +29,19 @@
  }
  #endif
  
@@ -721,6 +727,8 @@
 +	if (url.scheme() != url::kTraceScheme)
 +		/* Do not show infobar for non-trk URLs */
 +		return;
++	if (url.is_trq())
++		return;
 +	iridium::trace_url_request(caller, url);
 +}
 +#endif
@@ -728,7 +736,7 @@
  #if defined(OS_WIN)
  DLLEXPORT int __cdecl ChromeMain(HINSTANCE instance,
                                   sandbox::SandboxInterfaceInfo* sandbox_info) {
-@@ -63,6 +78,9 @@
+@@ -63,6 +80,9 @@
    params.argv = argv;
  #endif
  
@@ -3061,6 +3069,34 @@
  }
  
  void BackgroundModeManager::RegisterProfile(Profile* profile) {
+--- a/chrome/browser/browser_process_impl.cc
++++ b/chrome/browser/browser_process_impl.cc
+@@ -1054,7 +1054,9 @@
+   if (!command_line.HasSwitch(switches::kDisableWebResources)) {
+     DCHECK(!promo_resource_service_.get());
+     promo_resource_service_.reset(new PromoResourceService);
++#if 0
+     promo_resource_service_->StartAfterDelay();
++#endif
+   }
+ 
+ #if !defined(OS_ANDROID) && !defined(OS_IOS)
+--- a/chrome/browser/chrome_browser_main.cc
++++ b/chrome/browser/chrome_browser_main.cc
+@@ -1363,11 +1363,13 @@
+   // preferences are registered, since some of the code that the importer
+   // touches reads preferences.
+   if (first_run::IsChromeFirstRun()) {
++#if 0
+     first_run::AutoImport(profile_,
+                           master_prefs_->homepage_defined,
+                           master_prefs_->do_import_items,
+                           master_prefs_->dont_import_items,
+                           master_prefs_->import_bookmarks_path);
++#endif
+ 
+     // Note: this can pop the first run consent dialog on linux.
+     first_run::DoPostImportTasks(profile_,
 --- a/chrome/browser/chrome_content_browser_client.cc
 +++ b/chrome/browser/chrome_content_browser_client.cc
 @@ -620,7 +620,7 @@
@@ -3175,7 +3211,19 @@
  }  // namespace
 --- a/chrome/browser/component_updater/chrome_component_updater_configurator.cc
 +++ b/chrome/browser/component_updater/chrome_component_updater_configurator.cc
-@@ -58,8 +58,12 @@
+@@ -43,9 +43,11 @@
+ // Add "testrequest=1" attribute to the update check request.
+ const char kSwitchRequestParam[] = "test-request";
+ 
++#if 0
+ // Disables pings. Pings are the requests sent to the update server that report
+ // the success or the failure of component install or update attempts.
+ extern const char kSwitchDisablePings[] = "disable-pings";
++#endif
+ 
+ // Sets the URL for updates.
+ const char kSwitchUrlSource[] = "url-source";
+@@ -58,8 +60,12 @@
  // the request to the default URL source fails.
  // The value of |kDefaultUrlSource| can be overridden with
  // --component-updater=url-source=someurl.
@@ -3190,7 +3238,7 @@
  
  // Disables differential updates.
  const char kSwitchDisableDeltaUpdates[] = "disable-delta-updates";
-@@ -166,8 +170,12 @@
+@@ -166,7 +172,9 @@
             ",",
             &switch_values);
    fast_update_ = HasSwitchValue(switch_values, kSwitchFastUpdate);
@@ -3198,11 +3246,8 @@
    pings_enabled_ = !HasSwitchValue(switch_values, kSwitchDisablePings);
 +#endif
    deltas_enabled_ = !HasSwitchValue(switch_values, kSwitchDisableDeltaUpdates);
-+  fprintf(stderr, "%s: fast_update=%d pings_enabled=%d deltas_enabled=%d\n",
-+  	__PRETTY_FUNCTION__, fast_update_, pings_enabled_, deltas_enabled_);
  
  #if defined(OS_WIN)
-   background_downloads_enabled_ =
 @@ -218,10 +226,12 @@
    if (url_source_override_.is_valid()) {
      urls.push_back(GURL(url_source_override_));
@@ -3256,6 +3301,43 @@
  
  // Mime type to create a directory.
  const char kFolderMimeType[] = "application/vnd.google-apps.folder";
+--- a/chrome/browser/extensions/component_loader.cc
++++ b/chrome/browser/extensions/component_loader.cc
+@@ -334,17 +334,21 @@
+ }
+ 
+ void ComponentLoader::AddHotwordAudioVerificationApp() {
++#if 0
+   if (HotwordServiceFactory::IsAlwaysOnAvailable()) {
+     Add(IDR_HOTWORD_AUDIO_VERIFICATION_MANIFEST,
+         base::FilePath(FILE_PATH_LITERAL("hotword_audio_verification")));
+   }
++#endif
+ }
+ 
+ void ComponentLoader::AddHotwordHelperExtension() {
++#if 0
+   if (HotwordServiceFactory::IsHotwordAllowed(browser_context_)) {
+     Add(IDR_HOTWORD_MANIFEST,
+         base::FilePath(FILE_PATH_LITERAL("hotword")));
+   }
++#endif
+ }
+ 
+ void ComponentLoader::AddImageLoaderExtension() {
+@@ -488,10 +492,12 @@
+   DCHECK(!skip_session_components);
+   Add(IDR_BOOKMARKS_MANIFEST,
+       base::FilePath(FILE_PATH_LITERAL("bookmark_manager")));
++#if 0
+   // Cloud Print component app. Not required on Chrome OS.
+   Add(IDR_CLOUDPRINT_MANIFEST,
+       base::FilePath(FILE_PATH_LITERAL("cloud_print")));
+ #endif
++#endif
+ 
+   if (!skip_session_components) {
+     AddWebStoreApp();
 --- a/chrome/browser/extensions/extension_system_impl.cc
 +++ b/chrome/browser/extensions/extension_system_impl.cc
 @@ -312,6 +312,9 @@
@@ -3425,6 +3507,17 @@
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
    registry->RegisterBooleanPref(
        prefs::kDisableSpdy,
+--- a/chrome/browser/net/prediction_options.h
++++ b/chrome/browser/net/prediction_options.h
+@@ -21,7 +21,7 @@
+   NETWORK_PREDICTION_ALWAYS,
+   NETWORK_PREDICTION_WIFI_ONLY,
+   NETWORK_PREDICTION_NEVER,
+-  NETWORK_PREDICTION_DEFAULT = NETWORK_PREDICTION_WIFI_ONLY,
++  NETWORK_PREDICTION_DEFAULT = NETWORK_PREDICTION_NEVER,
+ };
+ 
+ void RegisterPredictionOptionsProfilePrefs(
 --- a/chrome/browser/net/predictor.cc
 +++ b/chrome/browser/net/predictor.cc
 @@ -366,7 +366,7 @@
@@ -3605,7 +3698,21 @@
          <span id="expand-feedback"></span>
 --- a/chrome/browser/safe_browsing/client_side_detection_service.cc
 +++ b/chrome/browser/safe_browsing/client_side_detection_service.cc
-@@ -76,11 +76,11 @@
+@@ -56,11 +56,13 @@
+     REPORT_RESULT_MAX
+   };
+ 
++#if 0
+   void UpdateEnumUMAHistogram(MalwareReportTypes report_type) {
+     DCHECK(report_type >= 0 && report_type < REPORT_RESULT_MAX);
+     UMA_HISTOGRAM_ENUMERATION("SBClientMalware.SentReports",
+                               report_type, REPORT_RESULT_MAX);
+   }
++#endif
+ 
+ }  // namespace
+ 
+@@ -76,11 +78,11 @@
  const int ClientSideDetectionService::kPositiveCacheIntervalMinutes = 30;
  
  const char ClientSideDetectionService::kClientReportPhishingUrl[] =
@@ -3621,6 +3728,44 @@
  
  struct ClientSideDetectionService::ClientReportInfo {
    ClientReportPhishingRequestCallback callback;
+@@ -317,6 +319,10 @@
+     return;
+   }
+ 
++#if 1
++  if (!callback.is_null())
++    callback.Run(GURL(request->url()), false);
++#else
+   std::string request_data;
+   if (!request->SerializeToString(&request_data)) {
+     UMA_HISTOGRAM_COUNTS("SBClientPhishing.RequestNotSerialized", 1);
+@@ -344,6 +350,7 @@
+ 
+   // Record that we made a request
+   phishing_report_times_.push(base::Time::Now());
++#endif
+ }
+ 
+ void ClientSideDetectionService::StartClientReportMalwareRequest(
+@@ -358,6 +365,10 @@
+     return;
+   }
+ 
++#if 1
++  if (!callback.is_null())
++    callback.Run(GURL(request->url()), GURL(request->url()), false);
++#else
+   std::string request_data;
+   if (!request->SerializeToString(&request_data)) {
+     UpdateEnumUMAHistogram(REPORT_FAILED_SERIALIZATION);
+@@ -391,6 +402,7 @@
+ 
+   // Record that we made a malware request
+   malware_report_times_.push(base::Time::Now());
++#endif
+ }
+ 
+ void ClientSideDetectionService::HandleModelResponse(
 --- a/chrome/browser/safe_browsing/download_feedback.cc
 +++ b/chrome/browser/safe_browsing/download_feedback.cc
 @@ -196,7 +196,7 @@
@@ -3632,6 +3777,33 @@
  
  // static
  DownloadFeedbackFactory* DownloadFeedback::factory_ = NULL;
+--- a/chrome/browser/safe_browsing/incident_reporting/incident_report_uploader_impl.cc
++++ b/chrome/browser/safe_browsing/incident_reporting/incident_report_uploader_impl.cc
+@@ -17,7 +17,7 @@
+ namespace {
+ 
+ const char kSbIncidentReportUrl[] =
+-    "https://sb-ssl.google.com/safebrowsing/clientreport/incident";
++    "trk:268:https://sb-ssl.google.com/safebrowsing/clientreport/incident";
+ 
+ }  // namespace
+ 
+--- a/chrome/browser/safe_browsing/protocol_manager.cc
++++ b/chrome/browser/safe_browsing/protocol_manager.cc
+@@ -739,10 +739,12 @@
+ GURL SafeBrowsingProtocolManager::NextChunkUrl(const std::string& url) const {
+   DCHECK(CalledOnValidThread());
+   std::string next_url;
++  const std::string url_prefix_without_trk(
++      GURL(url_prefix_).strip_trk().spec());
+   if (!StartsWithASCII(url, "http://", false) &&
+       !StartsWithASCII(url, "https://", false)) {
+     // Use https if we updated via https, otherwise http (useful for testing).
+-    if (StartsWithASCII(url_prefix_, "https://", false))
++    if (StartsWithASCII(url_prefix_without_trk, "https://", false))
+       next_url.append("https://");
+     else
+       next_url.append("http://");
 --- a/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc
 +++ b/chrome/browser/safe_browsing/safe_browsing_blocking_page.cc
 @@ -56,17 +56,17 @@
@@ -3639,51 +3811,66 @@
  #if defined(GOOGLE_CHROME_BUILD)
  const char kSbDiagnosticUrl[] =
 -    "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=googlechrome";
-+    "trk:227:http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=googlechrome";
++	/* trk:227 */ "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=googlechrome";
  #else
  const char kSbDiagnosticUrl[] =
 -    "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=chromium";
-+    "trk:228:http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=chromium";
++	/* trk:228 */ "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?site=%s&client=chromium";
  #endif
  
  // URL for malware and phishing, V2.
  const char kLearnMoreMalwareUrlV2[] =
 -    "https://www.google.com/transparencyreport/safebrowsing/";
-+    "trk:225:https://www.google.com/transparencyreport/safebrowsing/";
++	/* trk:225 */ "https://www.google.com/transparencyreport/safebrowsing/";
  const char kLearnMorePhishingUrlV2[] =
 -    "https://www.google.com/transparencyreport/safebrowsing/";
-+    "trk:226:https://www.google.com/transparencyreport/safebrowsing/";
++	/* trk:226 */ "https://www.google.com/transparencyreport/safebrowsing/";
  
  // After a malware interstitial where the user opted-in to the report
  // but clicked "proceed anyway", we delay the call to
+@@ -554,6 +554,7 @@
+ 
+ void SafeBrowsingBlockingPage::PopulateExtendedReportingOption(
+     base::DictionaryValue* load_time_data) {
++#if 0
+   // Only show checkbox if !(HTTPS || incognito-mode).
+   const bool show = CanShowMalwareDetailsOption();
+   load_time_data->SetBoolean(interstitials::kDisplayCheckBox, show);
+@@ -570,6 +571,7 @@
+   load_time_data->SetBoolean(
+       interstitials::kBoxChecked,
+       IsPrefEnabled(prefs::kSafeBrowsingExtendedReportingEnabled));
++#endif
+ }
+ 
+ void SafeBrowsingBlockingPage::PopulateMalwareLoadTimeData(
 --- a/chrome/browser/safe_browsing/safe_browsing_service.cc
 +++ b/chrome/browser/safe_browsing/safe_browsing_service.cc
-@@ -71,21 +71,21 @@
- // The default URL prefix where browser fetches chunk updates, hashes,
- // and reports safe browsing hits and malware details.
- const char* const kSbDefaultURLPrefix =
--    "https://safebrowsing.google.com/safebrowsing";
-+    "trk:165:https://safebrowsing.google.com/safebrowsing";
+@@ -95,9 +95,12 @@
+ #if defined(FULL_SAFE_BROWSING)
+ // Returns true if the incident reporting service is enabled via a field trial.
+ bool IsIncidentReportingServiceEnabled() {
++  return false;
++#if 0
+   const std::string group_name = base::FieldTrialList::FindFullName(
+       "SafeBrowsingIncidentReportingService");
+   return group_name == "Enabled";
++#endif
+ }
+ #endif  // defined(FULL_SAFE_BROWSING)
  
- // The backup URL prefix used when there are issues establishing a connection
- // with the server at the primary URL.
- const char* const kSbBackupConnectErrorURLPrefix =
--    "https://alt1-safebrowsing.google.com/safebrowsing";
-+    "trk:166:https://alt1-safebrowsing.google.com/safebrowsing";
+@@ -383,9 +386,11 @@
  
- // The backup URL prefix used when there are HTTP-specific issues with the
- // server at the primary URL.
- const char* const kSbBackupHttpErrorURLPrefix =
--    "https://alt2-safebrowsing.google.com/safebrowsing";
-+    "trk:167:https://alt2-safebrowsing.google.com/safebrowsing";
- 
- // The backup URL prefix used when there are local network specific issues.
- const char* const kSbBackupNetworkErrorURLPrefix =
--    "https://alt3-safebrowsing.google.com/safebrowsing";
-+    "trk:168:https://alt3-safebrowsing.google.com/safebrowsing";
- 
- base::FilePath CookieFilePath() {
-   return base::FilePath(
+ void SafeBrowsingService::RegisterAllDelayedAnalysis() {
+ #if defined(FULL_SAFE_BROWSING)
++#if 0
+   safe_browsing::RegisterBinaryIntegrityAnalysis();
+   safe_browsing::RegisterBlacklistLoadAnalysis();
+   safe_browsing::RegisterVariationsSeedSignatureAnalysis();
++#endif
+ #else
+   NOTREACHED();
+ #endif
 --- a/chrome/browser/safe_browsing/srt_global_error_win.cc
 +++ b/chrome/browser/safe_browsing/srt_global_error_win.cc
 @@ -32,7 +32,7 @@
@@ -3750,6 +3937,42 @@
  }
  
  TEST_P(HotwordServiceTest, DisableAlwaysOnOnLanguageChange) {
+--- a/chrome/browser/search/search.cc
++++ b/chrome/browser/search/search.cc
+@@ -257,6 +257,7 @@
+   return true;
+ }
+ 
++#if 0
+ // Returns whether |new_tab_url| can be used as a URL for the New Tab page.
+ // NEW_TAB_URL_VALID means a valid URL; other enum values imply an invalid URL.
+ NewTabURLState IsValidNewTabURL(Profile* profile, const GURL& new_tab_url) {
+@@ -270,6 +271,7 @@
+     return NEW_TAB_URL_BLOCKED;
+   return NEW_TAB_URL_VALID;
+ }
++#endif
+ 
+ // Used to look up the URL to use for the New Tab page. Also tracks how we
+ // arrived at that URL so it can be logged with UMA.
+@@ -278,6 +280,9 @@
+       : url(url), state(state) {}
+ 
+   static NewTabURLDetails ForProfile(Profile* profile) {
++#if 1
++    return NewTabURLDetails(GURL("about:blank"), NEW_TAB_URL_VALID);
++#else
+     const GURL local_url(chrome::kChromeSearchLocalNtpUrl);
+     TemplateURL* template_url = GetDefaultSearchProviderTemplateURL(profile);
+     if (!profile || !template_url)
+@@ -298,6 +303,7 @@
+         // Use the local New Tab otherwise.
+         return NewTabURLDetails(local_url, state);
+     }
++#endif
+   }
+ 
+   GURL url;
 --- a/chrome/browser/services/gcm/gcm_account_tracker.cc
 +++ b/chrome/browser/services/gcm/gcm_account_tracker.cc
 @@ -17,9 +17,9 @@
@@ -3764,6 +3987,30 @@
  // Name of the GCM account tracker for the OAuth2TokenService.
  const char kGCMAccountTrackerName[] = "gcm_account_tracker";
  // Minimum token validity when sending to GCM groups server.
+--- a/chrome/browser/signin/signin_promo.cc
++++ b/chrome/browser/signin/signin_promo.cc
+@@ -102,6 +102,7 @@
+ 
+ bool ShouldShowPromoAtStartup(Profile* profile, bool is_new_profile) {
+   DCHECK(profile);
++  return false;
+ 
+   // Don't show if the profile is an incognito.
+   if (profile->IsOffTheRecord())
+@@ -258,11 +259,11 @@
+       user_prefs::PrefRegistrySyncable::UNSYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+       prefs::kSignInPromoUserSkipped,
+-      false,
++      true,
+       user_prefs::PrefRegistrySyncable::UNSYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+       prefs::kSignInPromoShowOnFirstRunAllowed,
+-      true,
++      false,
+       user_prefs::PrefRegistrySyncable::UNSYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+       prefs::kSignInPromoShowNTPBubble,
 --- a/chrome/browser/spellchecker/spellcheck_hunspell_dictionary.cc
 +++ b/chrome/browser/spellchecker/spellcheck_hunspell_dictionary.cc
 @@ -214,7 +214,7 @@
@@ -3986,6 +4233,19 @@
  }
  
  MockPermissionBubbleRequest::~MockPermissionBubbleRequest() {}
+--- a/chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc
++++ b/chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc
+@@ -140,10 +140,6 @@
+     user_prefs::PrefRegistrySyncable* registry) {
+   registry->RegisterBooleanPref(
+       prefs::kLocalDiscoveryNotificationsEnabled,
+-#if defined(OS_WIN)
+       false,
+-#else
+-      true,
+-#endif
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+ }
 --- a/chrome/browser/ui/webui/ntp/ntp_resource_cache.cc
 +++ b/chrome/browser/ui/webui/ntp/ntp_resource_cache.cc
 @@ -76,17 +76,17 @@
@@ -4017,7 +4277,7 @@
  const int kDefaultGroupSize = 100;
  
 -const char promo_server_url[] = "https://clients3.google.com/crsignal/client";
-+const char promo_server_url[] = "about:blank";
++const char promo_server_url[] = "trk:122:about:blank";
  
  // The name of the preference that stores the promotion object.
  const char kPrefPromoObject[] = "promo";
@@ -4282,7 +4542,20 @@
  
 --- a/components/autofill/core/browser/autofill_manager.cc
 +++ b/components/autofill/core/browser/autofill_manager.cc
-@@ -164,7 +164,7 @@
+@@ -151,10 +151,12 @@
+       external_delegate_(NULL),
+       test_delegate_(NULL),
+       weak_ptr_factory_(this) {
++#if 0
+   if (enable_download_manager == ENABLE_AUTOFILL_DOWNLOAD_MANAGER) {
+     download_manager_.reset(
+         new AutofillDownloadManager(driver, client_->GetPrefs(), this));
+   }
++#endif
+ }
+ 
+ AutofillManager::~AutofillManager() {}
+@@ -164,7 +166,7 @@
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kAutofillEnabled,
@@ -4628,7 +4901,7 @@
    std::string server_url = variations::GetVariationParamValue(
 --- a/components/search_engines/prepopulated_engines.json
 +++ b/components/search_engines/prepopulated_engines.json
-@@ -36,6 +36,27 @@
+@@ -36,6 +36,26 @@
    // The following engines are included in country lists and are added to the
    // list of search engines on the first run depending on user's country.
    "elements": {
@@ -4636,9 +4909,8 @@
 +      "name": "Qwant",
 +      "keyword": "qwant.com",
 +      "favicon_url": "https://qwant.com/favicon.ico",
-+      "search_url": "https://qwant.com/?q={searchTerms}",
-+      "suggest_url": "https://qwant.com/?q={searchTerms}&language={language}&kac=1",
-+      "new_tab_url": "about:blank",
++      "search_url": "https://qwant.com/?q={searchTerms}&t=web",
++      "new_tab_url": "https://qwant.com/",
 +      "type": "SEARCH_ENGINE_QWANT",
 +      "id": 12
 +    },
@@ -4648,7 +4920,7 @@
 +      "favicon_url": "https://duckduckgo.com/favicon.ico",
 +      "search_url": "https://duckduckgo.com/?q={searchTerms}",
 +      "suggest_url": "https://duckduckgo.com/?q={searchTerms}&language={language}&kac=1",
-+      "new_tab_url": "about:blank",
++      "new_tab_url": "https://duckduckgo.com/",
 +      "type": "SEARCH_ENGINE_DUCKDUCKGO",
 +      "id": 11
 +    },
@@ -4656,7 +4928,7 @@
      "aol": {
        "name": "AOL",
        "keyword": "aol.com",
-@@ -108,7 +129,7 @@
+@@ -108,7 +128,7 @@
      "google": {
        "name": "Google",
        "keyword": "google.com",
@@ -5250,20 +5522,20 @@
    fetcher_->Start();
  
    return true;
+--- a/components/translate/core/common/translate_util.cc
++++ b/components/translate/core/common/translate_util.cc
+@@ -73,7 +73,7 @@
+   {"zh-CN", "zh-SG"},
+ };
+ 
+-const char kSecurityOrigin[] = "https://translate.googleapis.com/";
++const char kSecurityOrigin[] = "trk:220:https://translate.googleapis.com/";
+ 
+ void ToTranslateLanguageSynonym(std::string* language) {
+   for (size_t i = 0; i < arraysize(kLanguageCodeSimilitudes); ++i) {
 --- a/components/update_client/update_checker.cc
 +++ b/components/update_client/update_checker.cc
-@@ -108,6 +108,10 @@
-     const std::string& additional_attributes,
-     const UpdateCheckCallback& update_check_callback) {
-   DCHECK(thread_checker_.CalledOnValidThread());
-+  std::vector<GURL> zzz = config_.UpdateUrl();
-+  fprintf(stderr, "%s: enter\n", __PRETTY_FUNCTION__);
-+  if (zzz.size() > 0)
-+  	fprintf(stderr, "%s: url=%s\n", __PRETTY_FUNCTION__, zzz[0].spec().c_str());
- 
-   if (request_sender_.get()) {
-     NOTREACHED();
-@@ -128,13 +132,22 @@
+@@ -128,13 +128,22 @@
  void UpdateCheckerImpl::OnRequestSenderComplete(const net::URLFetcher* source) {
    DCHECK(thread_checker_.CalledOnValidThread());
  
@@ -5636,7 +5908,7 @@
        WEBKIT_VERSION_MAJOR,
        WEBKIT_VERSION_MINOR);
 +  if (strncmp(product.c_str(), "Chrome/", 7) != 0)
-+  	base::StringAppendF(&user_agent, " Chrome/43.0.2357.125");
++	base::StringAppendF(&user_agent, " Chrome/43.0.2357.132");
    return user_agent;
  }
  
@@ -5651,6 +5923,24 @@
  
    GURL url(args[0]);
    if (url.is_valid() && url.has_scheme())
+--- a/extensions/common/extension.cc
++++ b/extensions/common/extension.cc
+@@ -342,6 +342,7 @@
+ }
+ 
+ bool Extension::ShouldNotBeVisible() const {
++#if 0
+   // Don't show component extensions because they are only extensions as an
+   // implementation detail of Chrome.
+   if (extensions::Manifest::IsComponentLocation(location()) &&
+@@ -358,6 +359,7 @@
+   if (is_app() && !ShouldDisplayInAppLauncher() && !ShouldDisplayInNewTabPage())
+     return true;
+ 
++#endif
+   return false;
+ }
+ 
 --- a/extensions/common/update_manifest.cc
 +++ b/extensions/common/update_manifest.cc
 @@ -17,7 +17,7 @@
@@ -5695,6 +5985,30 @@
      default:
        NOTREACHED();
        return std::string();
+--- a/google_apis/gcm/engine/gservices_settings.cc
++++ b/google_apis/gcm/engine/gservices_settings.cc
+@@ -24,18 +24,18 @@
+ 
+ const int64 kDefaultCheckinInterval = 2 * 24 * 60 * 60;  // seconds = 2 days.
+ const int64 kMinimumCheckinInterval = 12 * 60 * 60;      // seconds = 12 hours.
+-const char kDefaultCheckinURL[] = "https://android.clients.google.com/checkin";
++const char kDefaultCheckinURL[] = "trk:110:https://android.clients.google.com/checkin";
+ const char kDefaultMCSHostname[] = "mtalk.google.com";
+ const int kDefaultMCSMainSecurePort = 5228;
+ const int kDefaultMCSFallbackSecurePort = 443;
+ const char kDefaultRegistrationURL[] =
+-    "https://android.clients.google.com/c2dm/register3";
++    "trk:111:https://android.clients.google.com/c2dm/register3";
+ // Settings that are to be deleted are marked with this prefix in checkin
+ // response.
+ const char kDeleteSettingPrefix[] = "delete_";
+ // Settings digest starts with verison number followed by '-'.
+ const char kDigestVersionPrefix[] = "1-";
+-const char kMCSEnpointTemplate[] = "https://%s:%d";
++const char kMCSEnpointTemplate[] = "trk:112:https://%s:%d";
+ const int kMaxSecurePort = 65535;
+ 
+ std::string MakeMCSEndpoint(const std::string& mcs_hostname, int port) {
 --- /dev/null
 +++ b/iridium/iridium.gyp
 @@ -0,0 +1,19 @@
@@ -9692,7 +10006,7 @@
  
 --- a/url/gurl.cc
 +++ b/url/gurl.cc
-@@ -544,6 +544,27 @@
+@@ -544,6 +544,41 @@
    inner_url_.swap(other->inner_url_);
  }
  
@@ -9709,6 +10023,13 @@
 +	return s.erase(0, pos + 1);
 +}
 +
++bool gurl_is_trq(const std::string &s)
++{
++	auto slen = strlen(url::kTraceScheme);
++	/* trk:0.nnn:http:// makes for a quiet one */
++	return s[slen+1] == '0' && s[slen+2] == '.';
++}
++
 +GURL GURL::strip_trk(void) const
 +{
 +	if (!SchemeIs(url::kTraceScheme))
@@ -9717,25 +10038,34 @@
 +	return GURL(gurl_strip_trk(s));
 +}
 +
++bool GURL::is_trq(void) const
++{
++	if (!SchemeIs(url::kTraceScheme))
++		return false;
++	return gurl_is_trq(spec());
++}
++
  std::ostream& operator<<(std::ostream& out, const GURL& url) {
    return out << url.possibly_invalid_spec();
  }
 --- a/url/gurl.h
 +++ b/url/gurl.h
-@@ -361,6 +361,8 @@
+@@ -361,6 +361,9 @@
      return inner_url_.get();
    }
  
 +  GURL strip_trk(void) const;
++  bool is_trq(void) const;
 +
   private:
    // Variant of the string parsing constructor that allows the caller to elect
    // retain trailing whitespace, if any, on the passed URL spec but only  if the
-@@ -401,5 +403,6 @@
+@@ -401,5 +404,7 @@
  
  // Stream operator so GURL can be used in assertion statements.
  URL_EXPORT std::ostream& operator<<(std::ostream& out, const GURL& url);
 +URL_EXPORT std::string &gurl_strip_trk(std::string &);
++URL_EXPORT bool gurl_is_trq(const std::string &);
  
  #endif  // URL_GURL_H_
 --- a/url/url_constants.cc
