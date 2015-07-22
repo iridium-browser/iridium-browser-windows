@@ -6,6 +6,8 @@ w32tm /config /syncfromflags:manual /manualpeerlist:0.pool.ntp.org,1.pool.ntp.or
 
 echo Increasing limits for remote shells
 rem winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="0"}'
+winrm set winrm/config @{MaxTimeoutms="7200000"}
+
 rem Increase limits for remote shells
 PowerShell Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 8192
 PowerShell Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxMemoryPerShellMB 8192
