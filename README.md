@@ -59,28 +59,6 @@ to the `Vagrantfile`).
 
 ## Troubleshooting
 
-If you receive this error while starting the virtual machine:
-```
-A host only network interface you're attempting to configure via DHCP
-already has a conflicting host only adapter with DHCP enabled. The
-DHCP on this adapter is incompatible with the DHCP settings. Two
-host only network interfaces are not allowed to overlap, and each
-host only network interface can have only one DHCP server. Please
-reconfigure your host only network or remove the virtual machine
-using the other host only network.
-```
-
-the network configuration in `Vagrantfile` must be changed from
-
-    config.vm.network "private_network", type: "dhcp"
-
-to
-
-    config.vm.network "private_network", ip: "1.2.3.4"
-
-where `1.2.3.4` is a local IP address that can be reached from your host.
-
-
 If you receive this error while starting the virtual machine from a remote
 ssh shell:
 ```
