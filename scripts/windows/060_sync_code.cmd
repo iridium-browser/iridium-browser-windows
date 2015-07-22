@@ -8,8 +8,8 @@ cd develop/src
 
 git tag -l "%CHROMIUM_VERSION%" | findstr "%CHROMIUM_VERSION%" >nul 2>&1
 if not %errorlevel% == 0 (
-    echo Fetching tag information...
-    call git fetch --tags
+    echo Fetching release tag...
+    call git fetch origin tags/%CHROMIUM_VERSION%
 )
 
 git branch --list "%RELEASE_BRANCH%" | findstr "%RELEASE_BRANCH%" >nul 2>&1
