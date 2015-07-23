@@ -4,17 +4,23 @@ rem Build .msi installer
 
 cd develop
 
+set ARCH=%1
 set VERSION=43.8.0
-set OUTPUT=%CD%\iridiumbrowser-%VERSION%.msi
+set OUTPUT=%CD%\iridiumbrowser-%VERSION%-%ARCH%.msi
+if "%1" == "x64" (
+    set RELEASE_FOLDER=src\out\Release_x64
+) else (
+    set RELEASE_FOLDER=src\out\Release
+)
 
-call c:\vagrant\scripts\windows\msi\build_msi.cmd src\out\Release\chrome.7z "%VERSION%" "%OUTPUT%" src\out\Release\ffmpegsumo-free.dll
+call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT%" %ARCH% %RELEASE_FOLDER%\ffmpegsumo-free.dll
 if not %errorlevel% == 0 (
     exit /b 1
 )
 
-set OUTPUT_EXTRA=%CD%\iridiumbrowser-%VERSION%-extra.msi
+set OUTPUT_EXTRA=%CD%\iridiumbrowser-%VERSION%-extra-%ARCH%.msi
 
-call c:\vagrant\scripts\windows\msi\build_msi.cmd src\out\Release\chrome.7z "%VERSION%" "%OUTPUT_EXTRA%" src\out\Release\ffmpegsumo-extra.dll
+call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT_EXTRA%" %ARCH% %RELEASE_FOLDER%\ffmpegsumo-extra.dll
 if not %errorlevel% == 0 (
     exit /b 1
 )

@@ -13,11 +13,12 @@
             Keywords="Installer"
             Description="Iridium Browser $(var.Version) Installer"
             Manufacturer="The Iridium Authors"
-            InstallerVersion="100"
+            InstallerVersion="200"
             Languages="1033,1031"
             Compressed="yes"
             InstallScope="perUser"
             InstallPrivileges="limited"
+            Platform="$(var.Platform)"
             SummaryCodepage="1252" />
 
         <Property Id="Iridium_Version" Value="$(var.Version)" />
@@ -31,8 +32,14 @@
         <Media Id="1" Cabinet="iridiumbrowser.cab" EmbedCab="yes" />
         <Property Id="DiskPrompt" Value="!(loc.Iridium_DiskPrompt)" />
 
+        <?if $(var.Platform) = x64 ?>
+            <?define ProgramFilesFolderArch="ProgramFiles64Folder"?>
+        <?else?>
+            <?define ProgramFilesFolderArch="ProgramFilesFolder"?>
+        <?endif?>
+
         <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="ProgramFilesFolder" Name="PFiles">
+            <Directory Id="$(var.ProgramFilesFolderArch)" Name="PFiles">
                 <Directory Id="INSTALLDIR" Name="!(loc.Iridium_InstallFolder)">
                 </Directory>
             </Directory>

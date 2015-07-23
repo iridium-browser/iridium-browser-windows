@@ -32,7 +32,12 @@ if "%OUTPUT%" == "" (
     set OUTPUT="%ROOT%\iridiumbrowser-%VERSION%.msi"
 )
 
-set FFMPEG=%4
+set ARCH=%4
+if "%ARCH%" == "" (
+    set ARCH="x86"
+)
+
+set FFMPEG=%5
 
 goto main
 
@@ -121,7 +126,7 @@ if not %errorlevel% == 0 (
 )
 
 echo Processing WXS scripts
-"%CMD_CANDLE%" %COMMON_ARGS% -d"SourceRoot=%SOURCE_ROOT%" -dVersion=%VERSION% -o "%ROOT%\\" "%ROOT%\iridium.wxs" "%ROOT%\iridium-files.wxs"
+"%CMD_CANDLE%" %COMMON_ARGS% -d"SourceRoot=%SOURCE_ROOT%" -dVersion=%VERSION% -dPlatform=%ARCH% -arch %ARCH% -o "%ROOT%\\" "%ROOT%\iridium.wxs" "%ROOT%\iridium-files.wxs"
 if not %errorlevel% == 0 (
     echo Failed, please check errors above
     exit /b 1

@@ -4,7 +4,7 @@ rem Execute gclient hooks
 
 if "%1" == "x64" (
     echo Preparing for 64bit build
-    set GYP_DEFINES=remove_webcore_debug_symbols=1 host_arch=x64 target_arch=x64
+    set GYP_DEFINES=remove_webcore_debug_symbols=1 target_arch=x64
 ) else (
     echo Preparing for 32bit build
     set GYP_DEFINES=remove_webcore_debug_symbols=1
