@@ -28,13 +28,12 @@ if "%VERSION%" == "" (
 )
 
 set OUTPUT=%3
-if "%OUTPUT%" == "" (
-    set OUTPUT="%ROOT%\iridiumbrowser-%VERSION%.msi"
-)
-
 set ARCH=%4
 if "%ARCH%" == "" (
     set ARCH="x86"
+)
+if "%OUTPUT%" == "" (
+    set OUTPUT="%ROOT%\iridiumbrowser-%VERSION%-%ARCH%"
 )
 
 set FFMPEG=%5
@@ -116,6 +115,19 @@ if exist "%ROOT%\sign_files.cmd" (
     call "%ROOT%\sign_files.cmd" "%SOURCE_ROOT%"
 )
 
+echo Generating portable package
+rem Get "baz-1.2.3-lala" from "C:\foo\bar\baz-1.2.3-lala"
+for %%O in (%OUTPUT%) do set OUTPUT_BASENAME=%%~nxO
+set PORTABLE_ROOT=%ROOT%\chrome-source\%OUTPUT_BASENAME%
+if exist "%PORTABLE_ROOT%" (
+    rmdir /s /q "%PORTABLE_ROOT%" > NUL
+)
+xcopy /s /i /y "%SOURCE_ROOT%" "%PORTABLE_ROOT%" > NUL
+if exist "%OUTPUT%.zip" (
+    del /q "%OUTPUT%.zip" > NUL
+)
+%CMD_7ZA% a -tzip -mx9 -y "%OUTPUT%.zip" "%PORTABLE_ROOT%" > NUL
+
 set COMMON_ARGS=-nologo -wx
 
 echo Generating file lists
@@ -143,9 +155,9 @@ call :compilelang en en-us 1033
 call :compilelang de de-de 1031
 
 rem Store additional languages in base installer (English)
-copy /y "%MSI_TEMP_FOLDER%\output_en.msi" "%OUTPUT%" >NUL
-call :preparelang "%MSI_TEMP_FOLDER%\output" "%OUTPUT%" de 1031
+copy /y "%MSI_TEMP_FOLDER%\output_en.msi" "%OUTPUT%.msi" >NUL
+call :preparelang "%MSI_TEMP_FOLDER%\output" "%OUTPUT%.msi" de 1031
 
 if exist "%ROOT%\sign_files.cmd" (
-    call "%ROOT%\sign_files.cmd" "%OUTPUT%"
+    call "%ROOT%\sign_files.cmd" "%OUTPUT%.msi"
 )
