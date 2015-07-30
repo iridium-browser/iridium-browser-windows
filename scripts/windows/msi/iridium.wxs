@@ -25,6 +25,8 @@
 
         <Property Id="MSIINSTALLPERUSER" Value="1" />
         <Property Id="ALLUSERS" Value="2" />
+        <Property Id="ARPHELPLINK" Value="https://iridiumbrowser.de"/>
+        <Property Id="ARPURLINFOABOUT" Value="https://iridiumbrowser.de"/>
 
         <MajorUpgrade
             AllowDowngrades="yes" />
