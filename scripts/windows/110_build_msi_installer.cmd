@@ -5,6 +5,9 @@ rem Build .msi installer
 cd develop
 
 set ARCH=%1
+if "%ARCH%" == "" (
+    set ARCH="x86"
+)
 set VERSION=43.8.0
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%-%ARCH%
 if "%1" == "x64" (
