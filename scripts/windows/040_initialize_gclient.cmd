@@ -6,8 +6,11 @@ if not exist "develop" (
 )
 
 cd develop
-if not exist ".gclient" (
+if not exist "src" (
     echo Initializing gclient
+    if exist ".gclient" (
+        del .gclient > NUL
+    )
     call fetch --nohooks chromium
 ) else (
     echo gclient already initialized
