@@ -16,6 +16,10 @@ rem Enable proprietary codecs in Iridium (this adds various mime-types but
 rem doesn't include the actual codecs).
 set GYP_DEFINES=%GYP_DEFINES% proprietary_codecs=1
 
+rem Always build FFmpeg as shared library so we can have both the regular and
+rem the "-extra" package later.
+set GYP_DEFINES=%GYP_DEFINES% build_ffmpegsumo=1 ffmpeg_component=shared_library
+
 rem Ignore macro redefinitions for now, will get fixed upstream in iridium-browser
 set CFLAGS=%CFLAGS% /wd4005
 set CXXFLAGS=%CXXFLAGS% /wd4005

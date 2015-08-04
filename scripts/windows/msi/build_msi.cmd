@@ -105,8 +105,8 @@ if not exist "%SOURCE_ROOT%" (
 
 if not "%FFMPEG%" == "" (
     for /D %%s in ("%SOURCE_ROOT%\*") do (
-        echo Using %FFMPEG% as FFmpeg library %%s\ffmpegsumo.dll
-        copy /y "%FFMPEG%" "%%s\ffmpegsumo.dll" >NUL
+        echo Using %FFMPEG% as FFmpeg library %%s\ffmpeg.dll
+        copy /y "%FFMPEG%" "%%s\ffmpeg.dll" >NUL
     )
 )
 

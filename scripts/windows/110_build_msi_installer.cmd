@@ -8,7 +8,7 @@ set ARCH=%1
 if "%ARCH%" == "" (
     set ARCH="x86"
 )
-set VERSION=43.8.0
+set VERSION=44.0.0
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%-%ARCH%
 if "%1" == "x64" (
     set RELEASE_FOLDER=src\out\Release_x64
@@ -16,14 +16,14 @@ if "%1" == "x64" (
     set RELEASE_FOLDER=src\out\Release
 )
 
-call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT%" %ARCH% %RELEASE_FOLDER%\ffmpegsumo-free.dll
+call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT%" %ARCH% %RELEASE_FOLDER%\ffmpeg-free.dll
 if not %errorlevel% == 0 (
     exit /b 1
 )
 
 set OUTPUT_EXTRA=%CD%\iridiumbrowser-%VERSION%-extra-%ARCH%
 
-call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT_EXTRA%" %ARCH% %RELEASE_FOLDER%\ffmpegsumo-extra.dll
+call c:\vagrant\scripts\windows\msi\build_msi.cmd %RELEASE_FOLDER%\chrome.7z "%VERSION%" "%OUTPUT_EXTRA%" %ARCH% %RELEASE_FOLDER%\ffmpeg-extra.dll
 if not %errorlevel% == 0 (
     exit /b 1
 )

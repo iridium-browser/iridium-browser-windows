@@ -23,25 +23,25 @@ if not %errorlevel% == 0 (
 
 echo Building FFmpeg with free codecs
 set OLD_GYP_DEFINES=%GYP_DEFINES%
-set GYP_DEFINES=%OLD_GYP_DEFINES% ffmpeg_branding=Chromium
+set GYP_DEFINES=%OLD_GYP_DEFINES% ffmpeg_branding=Chromium ffmpeg_component=shared_library
 if "%1" == "x64" (
     set GYP_DEFINES=%GYP_DEFINES% target_arch=x64
 )
 call python src\build\gyp_chromium src\third_party\ffmpeg\ffmpeg.gyp
-ninja -C %RELEASE_FOLDER% ffmpegsumo
+ninja -C %RELEASE_FOLDER%
 if not %errorlevel% == 0 (
     exit /b 1
 )
-copy /y %RELEASE_FOLDER%\ffmpegsumo.dll %RELEASE_FOLDER%\ffmpegsumo-free.dll >NUL
+copy /y %RELEASE_FOLDER%\ffmpeg.dll %RELEASE_FOLDER%\ffmpeg-free.dll >NUL
 
 echo Building FFmpeg with proprietary codecs
-set GYP_DEFINES=%OLD_GYP_DEFINES% ffmpeg_branding=Chrome
+set GYP_DEFINES=%OLD_GYP_DEFINES% ffmpeg_branding=Chrome ffmpeg_component=shared_library
 if "%1" == "x64" (
     set GYP_DEFINES=%GYP_DEFINES% target_arch=x64
 )
 call python src\build\gyp_chromium src\third_party\ffmpeg\ffmpeg.gyp
-ninja -C %RELEASE_FOLDER% ffmpegsumo
+ninja -C %RELEASE_FOLDER%
 if not %errorlevel% == 0 (
     exit /b 1
 )
-copy /y %RELEASE_FOLDER%\ffmpegsumo.dll %RELEASE_FOLDER%\ffmpegsumo-extra.dll >NUL
+copy /y %RELEASE_FOLDER%\ffmpeg.dll %RELEASE_FOLDER%\ffmpeg-extra.dll >NUL
