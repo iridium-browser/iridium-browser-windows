@@ -1785,6 +1785,70 @@
          </message>
          <message name="IDS_EULA_SCREEN_ACCESSIBLE_TITLE" desc="Title to be spoken on opening the OOBE EULA screen">
            Chromium OS terms
+--- a/chrome/app/generated_resources.grd
++++ b/chrome/app/generated_resources.grd
+@@ -14667,11 +14667,11 @@
+       <if expr="is_win">
+         <message name="IDS_METRO_FLOW_TAB_TITLE"
+                  desc="The dialog window title.">
+-          Welcome to Chrome
++          Welcome to Iridium
+         </message>
+         <message name="IDS_METRO_FLOW_TITLE_SHORT"
+                  desc="The title at the top of the window guiding user through making Chrome default in Metro.">
+-          Chrome is almost ready.
++          Iridium is almost ready.
+         </message>
+         <message name="IDS_METRO_FLOW_DESCRIPTION"
+                  desc="Wordy description of what the set-Chrome-as-Metro flow is all about.">
+@@ -14683,7 +14683,7 @@
+         </message>
+         <message name="IDS_METRO_FLOW_LOGO_STRING_ALT"
+                  desc="Alt text for the faded Chrome logo image.">
+-            Chrome logo
++            Iridium logo
+         </message>
+         <message name="IDS_METRO_MISSING_PLUGIN_PROMPT"
+                  desc="Info Bar message to let user do something about the missing plugin">
+@@ -14703,31 +14703,31 @@
+         </message>
+         <message name="IDS_WIN_DESKTOP_OPEN"
+                  desc="Text for the infobar button to open Chrome in desktop mode.">
+-          Open Chrome on the desktop
++          Open Iridium on the desktop
+         </message>
+         <message name="IDS_WIN_DESKTOP_RESTART"
+                  desc="Text for the menu item to restart Chrome in desktop mode. Applies to Windows 8 only">
+-          Relaunch Chrome on the desktop
++          Relaunch Iridium on the desktop
+         </message>
+         <message name="IDS_WIN8_METRO_RESTART"
+                  desc="Text for the menu item to restart Chrome in metro. Applies to Windows 8 only">
+-          Relaunch Chrome in Windows 8 mode
++          Relaunch Iridium in Windows 8 mode
+         </message>
+         <message name="IDS_WIN8_PROMPT_TO_CLOSE_APPS_FOR_METRO"
+                  desc="Modal message box prompt shown to the user after requesting to relaunch in Windows 8 mode while packaged apps are running, which will require all packaged apps to be closed and then restarted. Dialog is shown with choices: OK, Cancel.">
+-          Relaunching in Windows 8 mode will close and relaunch your Chrome apps.
++          Relaunching in Windows 8 mode will close and relaunch your Iridium apps.
+         </message>
+         <message name="IDS_WIN_CHROMEOS_RESTART"
+                  desc="Text for the menu item to restart chrome in chrome os. Aplies to Windows 7 only">
+-          Relaunch in Chrome immersive mode
++          Relaunch in Iridium immersive mode
+         </message>
+         <message name="IDS_WIN_PROMPT_TO_CLOSE_APPS_FOR_CHROMEOS"
+                  desc="Modal message box prompt shown to the user after requesting to relaunch in Windows Chrome OS mode while packaged apps are running, which will require all packaged apps to be closed and then restarted. Dialog is shown with choices: OK, Cancel.">
+-          Relaunching in Chrome immersive mode will close and relaunch your Chrome apps.
++          Relaunching in Iridium immersive mode will close and relaunch your Iridium apps.
+         </message>
+         <message name="IDS_WIN_PROMPT_TO_CLOSE_APPS_FOR_DESKTOP"
+                  desc="Modal message box prompt shown to the user after requesting to relaunch in Desktop mode while packaged apps are running, which will require all packaged apps to be closed and then restarted. Dialog is shown with choices: OK, Cancel.">
+-          Relaunching in Desktop mode will close and relaunch your Chrome apps.
++          Relaunching in Desktop mode will close and relaunch your Iridium apps.
+         </message>
+       </if>
+ 
 --- a/chrome/app/resources/chromium_strings_am.xtb
 +++ b/chrome/app/resources/chromium_strings_am.xtb
 @@ -268,7 +268,6 @@
@@ -3263,6 +3327,19 @@
  
  // Mime type to create a directory.
  const char kFolderMimeType[] = "application/vnd.google-apps.folder";
+--- a/chrome/browser/extensions/api/cryptotoken_private/cryptotoken_private_api.cc
++++ b/chrome/browser/extensions/api/cryptotoken_private/cryptotoken_private_api.cc
+@@ -12,8 +12,8 @@
+ 
+ const char kGoogleDotCom[] = "google.com";
+ const char* kGoogleGstaticAppIds[] = {
+-  "https://www.gstatic.com/securitykey/origins.json",
+-  "https://www.gstatic.com/securitykey/a/google.com/origins.json"
++  "trk:273:https://www.gstatic.com/securitykey/origins.json",
++  "trk:274:https://www.gstatic.com/securitykey/a/google.com/origins.json"
+ };
+ 
+ CryptotokenPrivateCanOriginAssertAppIdFunction::
 --- a/chrome/browser/extensions/component_loader.cc
 +++ b/chrome/browser/extensions/component_loader.cc
 @@ -347,17 +347,21 @@
@@ -3581,6 +3658,17 @@
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
  #if defined(OS_ANDROID)
    registry->RegisterStringPref(
+--- a/chrome/browser/profiles/profile_avatar_downloader.cc
++++ b/chrome/browser/profiles/profile_avatar_downloader.cc
+@@ -13,7 +13,7 @@
+ 
+ namespace {
+ const char kHighResAvatarDownloadUrlPrefix[] =
+-    "https://www.gstatic.com/chrome/profile_avatars/";
++    "trk:271:https://www.gstatic.com/chrome/profile_avatars/";
+ }
+ 
+ ProfileAvatarDownloader::ProfileAvatarDownloader(
 --- a/chrome/browser/resources/chromeos/chromevox/chromevox/background/prefs.js
 +++ b/chrome/browser/resources/chromeos/chromevox/chromevox/background/prefs.js
 @@ -71,9 +71,9 @@
@@ -3666,7 +3754,16 @@
  
  struct ClientSideDetectionService::ClientReportInfo {
    ClientReportPhishingRequestCallback callback;
-@@ -317,6 +319,10 @@
+@@ -276,6 +278,8 @@
+     model_fetcher_ = net::URLFetcher::Create(0 /* ID used for testing */,
+                                              GURL(kClientModelUrl),
+                                              net::URLFetcher::GET, this);
++    model_fetcher_->SetLoadFlags(net::LOAD_DO_NOT_SAVE_COOKIES |
++                                 net::LOAD_DO_NOT_SEND_COOKIES);
+     model_fetcher_->SetRequestContext(request_context_getter_.get());
+     model_fetcher_->Start();
+   }
+@@ -317,6 +321,10 @@
      return;
    }
  
@@ -3677,7 +3774,7 @@
    std::string request_data;
    if (!request->SerializeToString(&request_data)) {
      UMA_HISTOGRAM_COUNTS("SBClientPhishing.RequestNotSerialized", 1);
-@@ -344,6 +350,7 @@
+@@ -344,6 +352,7 @@
  
    // Record that we made a request
    phishing_report_times_.push(base::Time::Now());
@@ -3685,7 +3782,7 @@
  }
  
  void ClientSideDetectionService::StartClientReportMalwareRequest(
-@@ -358,6 +365,10 @@
+@@ -358,6 +367,10 @@
      return;
    }
  
@@ -3696,7 +3793,7 @@
    std::string request_data;
    if (!request->SerializeToString(&request_data)) {
      UpdateEnumUMAHistogram(REPORT_FAILED_SERIALIZATION);
-@@ -391,6 +402,7 @@
+@@ -391,6 +404,7 @@
  
    // Record that we made a malware request
    malware_report_times_.push(base::Time::Now());
@@ -3715,6 +3812,19 @@
  
  // static
  DownloadFeedbackFactory* DownloadFeedback::factory_ = NULL;
+--- a/chrome/browser/safe_browsing/download_protection_service.cc
++++ b/chrome/browser/safe_browsing/download_protection_service.cc
+@@ -793,7 +793,9 @@
+     fetcher_ = net::URLFetcher::Create(0 /* ID used for testing */,
+                                        GetDownloadRequestUrl(),
+                                        net::URLFetcher::POST, this);
+-    fetcher_->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++    fetcher_->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                           net::LOAD_DO_NOT_SAVE_COOKIES |
++                           net::LOAD_DO_NOT_SEND_COOKIES);
+     fetcher_->SetAutomaticallyRetryOn5xx(false);  // Don't retry on error.
+     fetcher_->SetRequestContext(service_->request_context_getter_.get());
+     fetcher_->SetUploadData("application/octet-stream",
 --- a/chrome/browser/safe_browsing/incident_reporting/incident_report_uploader_impl.cc
 +++ b/chrome/browser/safe_browsing/incident_reporting/incident_report_uploader_impl.cc
 @@ -17,7 +17,7 @@
@@ -3726,9 +3836,65 @@
  
  }  // namespace
  
+--- a/chrome/browser/safe_browsing/malware_details_cache.cc
++++ b/chrome/browser/safe_browsing/malware_details_cache.cc
+@@ -83,7 +83,8 @@
+   current_fetch_->SetRequestContext(request_context_getter_.get());
+   // Only from cache, and don't save cookies.
+   current_fetch_->SetLoadFlags(net::LOAD_ONLY_FROM_CACHE |
+-                               net::LOAD_DO_NOT_SAVE_COOKIES);
++                               net::LOAD_DO_NOT_SAVE_COOKIES |
++                               net::LOAD_DO_NOT_SEND_COOKIES);
+   current_fetch_->SetAutomaticallyRetryOn5xx(false);  // No retries.
+   current_fetch_->Start();  // OnURLFetchComplete will be called when done.
+ }
 --- a/chrome/browser/safe_browsing/protocol_manager.cc
 +++ b/chrome/browser/safe_browsing/protocol_manager.cc
-@@ -749,10 +749,12 @@
+@@ -195,7 +195,9 @@
+ 
+   const std::string get_hash = safe_browsing::FormatGetHash(prefixes);
+ 
+-  fetcher->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++  fetcher->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                        net::LOAD_DO_NOT_SAVE_COOKIES |
++                        net::LOAD_DO_NOT_SEND_COOKIES);
+   fetcher->SetRequestContext(request_context_getter_.get());
+   fetcher->SetUploadData("text/plain", get_hash);
+   fetcher->Start();
+@@ -569,7 +571,9 @@
+   GURL backup_update_url = BackupUpdateUrl(backup_update_reason);
+   request_ = net::URLFetcher::Create(url_fetcher_id_++, backup_update_url,
+                                      net::URLFetcher::POST, this);
+-  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                         net::LOAD_DO_NOT_SAVE_COOKIES |
++                         net::LOAD_DO_NOT_SEND_COOKIES);
+   request_->SetRequestContext(request_context_getter_.get());
+   request_->SetUploadData("text/plain", update_list_data_);
+   request_->Start();
+@@ -596,7 +600,9 @@
+   request_type_ = CHUNK_REQUEST;
+   request_ = net::URLFetcher::Create(url_fetcher_id_++, chunk_url,
+                                      net::URLFetcher::GET, this);
+-  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                         net::LOAD_DO_NOT_SAVE_COOKIES |
++                         net::LOAD_DO_NOT_SEND_COOKIES);
+   request_->SetRequestContext(request_context_getter_.get());
+   chunk_request_start_ = base::Time::Now();
+   request_->Start();
+@@ -647,7 +653,9 @@
+   GURL update_url = UpdateUrl();
+   request_ = net::URLFetcher::Create(url_fetcher_id_++, update_url,
+                                      net::URLFetcher::POST, this);
+-  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++  request_->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                         net::LOAD_DO_NOT_SAVE_COOKIES |
++                         net::LOAD_DO_NOT_SEND_COOKIES);
+   request_->SetRequestContext(request_context_getter_.get());
+   request_->SetUploadData("text/plain", update_list_data_);
+   request_->Start();
+@@ -749,10 +757,12 @@
  GURL SafeBrowsingProtocolManager::NextChunkUrl(const std::string& url) const {
    DCHECK(CalledOnValidThread());
    std::string next_url;
@@ -3809,6 +3975,19 @@
  #else
    NOTREACHED();
  #endif
+--- a/chrome/browser/safe_browsing/srt_fetcher_win.cc
++++ b/chrome/browser/safe_browsing/srt_fetcher_win.cc
+@@ -77,7 +77,9 @@
+                                              GURL(GetSRTDownloadURL()),
+                                              net::URLFetcher::GET,
+                                              this)) {
+-    url_fetcher_->SetLoadFlags(net::LOAD_DISABLE_CACHE);
++    url_fetcher_->SetLoadFlags(net::LOAD_DISABLE_CACHE |
++                               net::LOAD_DO_NOT_SAVE_COOKIES |
++                               net::LOAD_DO_NOT_SEND_COOKIES);
+     url_fetcher_->SetMaxRetriesOn5xx(3);
+     url_fetcher_->SaveResponseToTemporaryFile(
+         BrowserThread::GetMessageLoopProxyForThread(BrowserThread::FILE));
 --- a/chrome/browser/safe_browsing/srt_global_error_win.cc
 +++ b/chrome/browser/safe_browsing/srt_global_error_win.cc
 @@ -32,7 +32,7 @@
@@ -3978,6 +4157,17 @@
 +const char kQueryFormat[] = "trk:238:https://www.googleapis.com/customsearch/v1"
      "?cx=017993620680222980993%%3A1wdumejvx5i&key=%s&q=inurl%%3A%s";
  const char kQuerySafeParam[] = "&safe=high";
+ 
+--- a/chrome/browser/supervised_user/supervised_user_service.cc
++++ b/chrome/browser/supervised_user/supervised_user_service.cc
+@@ -75,7 +75,7 @@
+ 
+ // The URL from which to download a host blacklist if no local one exists yet.
+ const char kBlacklistURL[] =
+-    "https://www.gstatic.com/chrome/supervised_user/blacklist-20141001-1k.bin";
++    "trk:272:https://www.gstatic.com/chrome/supervised_user/blacklist-20141001-1k.bin";
+ // The filename under which we'll store the blacklist (in the user data dir).
+ const char kBlacklistFilename[] = "su-blacklist.bin";
  
 --- a/chrome/browser/sync/profile_sync_service.cc
 +++ b/chrome/browser/sync/profile_sync_service.cc
@@ -4321,6 +4511,20 @@
 +#define PRODUCT_VERSION "@MAJOR@.@MINOR@"
  #define LAST_CHANGE "@LASTCHANGE@"
  #define IS_OFFICIAL_BUILD @OFFICIAL_BUILD@
+ 
+--- a/chrome/common/extensions/chrome_extensions_client.cc
++++ b/chrome/common/extensions/chrome_extensions_client.cc
+@@ -57,9 +57,9 @@
+ 
+ // TODO(battre): Delete the HTTP URL once the blacklist is downloaded via HTTPS.
+ const char kExtensionBlocklistUrlPrefix[] =
+-    "http://www.gstatic.com/chrome/extensions/blacklist";
++    "trk:269:http://www.gstatic.com/chrome/extensions/blacklist";
+ const char kExtensionBlocklistHttpsUrlPrefix[] =
+-    "https://www.gstatic.com/chrome/extensions/blacklist";
++    "trk:270:https://www.gstatic.com/chrome/extensions/blacklist";
+ 
+ const char kThumbsWhiteListedExtension[] = "khopmbdjffemhegeeobelklnbglcdgfh";
  
 --- a/chrome/common/extensions/extension_constants.cc
 +++ b/chrome/common/extensions/extension_constants.cc
@@ -5854,6 +6058,27 @@
  
    GURL url(args[0]);
    if (url.is_valid() && url.has_scheme())
+--- a/device/battery/battery_status_service.cc
++++ b/device/battery/battery_status_service.cc
+@@ -39,6 +39,7 @@
+   if (!battery_fetcher_)
+     battery_fetcher_ = BatteryStatusManager::Create(update_callback_);
+ 
++#if 0
+   if (callback_list_.empty()) {
+     bool success = battery_fetcher_->StartListeningBatteryChange();
+     // On failure pass the default values back.
+@@ -50,6 +51,10 @@
+     // Send recent status to the new callback if already available.
+     callback.Run(status_);
+   }
++#else
++  // Always pass the default values.
++  callback.Run(BatteryStatus());
++#endif
+ 
+   return callback_list_.Add(callback);
+ }
 --- a/extensions/common/extension.cc
 +++ b/extensions/common/extension.cc
 @@ -342,6 +342,7 @@
