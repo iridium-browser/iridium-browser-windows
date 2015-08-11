@@ -5,9 +5,11 @@ tzutil /s "utc"
 w32tm /config /syncfromflags:manual /manualpeerlist:0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org,3.pool.ntp.org
 
 echo Increasing limits for remote shells
-winrm set winrm/config/winrs @{MaxMemoryPerShellMB="8192"}
-winrm set winrm/config/winrs @{IdleTimeout="86400000"}
-winrm set winrm/config @{MaxTimeoutms="86400000"}
+call winrm set winrm/config/winrs @{MaxMemoryPerShellMB="8192"}
+call winrm set winrm/config/winrs @{MaxProcessesPerShell="512"}
+call winrm set winrm/config/winrs @{MaxShellsPerUser="128"}
+call winrm set winrm/config/winrs @{IdleTimeout="86400000"}
+call winrm set winrm/config @{MaxTimeoutms="86400000"}
 
 rem Increase limits for remote shells
 PowerShell Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 8192
