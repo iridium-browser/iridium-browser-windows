@@ -187,9 +187,10 @@
 +++ b/chrome/VERSION
 @@ -1,4 +1,4 @@
  MAJOR=44
- MINOR=0
+-MINOR=0
 -BUILD=2403
--PATCH=125
+-PATCH=157
++MINOR=1
 +BUILD=0
 +PATCH=0
 --- a/chrome/android/java/strings/translations/android_chrome_strings_am.xtb
@@ -3814,7 +3815,7 @@
  DownloadFeedbackFactory* DownloadFeedback::factory_ = NULL;
 --- a/chrome/browser/safe_browsing/download_protection_service.cc
 +++ b/chrome/browser/safe_browsing/download_protection_service.cc
-@@ -793,7 +793,9 @@
+@@ -826,7 +826,9 @@
      fetcher_ = net::URLFetcher::Create(0 /* ID used for testing */,
                                         GetDownloadRequestUrl(),
                                         net::URLFetcher::POST, this);
@@ -4300,7 +4301,7 @@
            content::Referrer(),
 --- a/chrome/browser/ui/startup/startup_browser_creator_impl.cc
 +++ b/chrome/browser/ui/startup/startup_browser_creator_impl.cc
-@@ -909,11 +909,15 @@
+@@ -914,11 +914,15 @@
    // at the front or back as indicated by welcome_run_type_), or the set of URLs
    // specified on the command line.
    if (startup_urls->empty()) {
@@ -4691,15 +4692,6 @@
  }
  
  AutofillManager::~AutofillManager() {}
-@@ -164,7 +166,7 @@
-     user_prefs::PrefRegistrySyncable* registry) {
-   registry->RegisterBooleanPref(
-       prefs::kAutofillEnabled,
--      true,
-+      false,
-       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
-   registry->RegisterBooleanPref(prefs::kAutofillWalletSyncExperimentEnabled,
-                                 false);
 --- a/components/cloud_devices/common/cloud_devices_urls.cc
 +++ b/components/cloud_devices/common/cloud_devices_urls.cc
 @@ -14,25 +14,25 @@
@@ -5647,6 +5639,16 @@
    &najdi,        &naver,        &onet,         &seznam,       &sogou,
    &vinden,       &virgilio,     &yahoo,        &yahoo_ar,     &yahoo_at,
    &yahoo_au,     &yahoo_br,     &yahoo_ca,     &yahoo_ch,     &yahoo_cl,
+--- a/components/signin/core/common/profile_management_switches.cc
++++ b/components/signin/core/common/profile_management_switches.cc
+@@ -41,6 +41,7 @@
+   bool not_consistent_identity =
+       base::CommandLine::ForCurrentProcess()->HasSwitch(
+           switches::kDisableAccountConsistency);
++  not_new_avatar_menu = true;
+   int count_args = (is_new_avatar_menu ? 1 : 0) +
+       (is_new_profile_management ? 1 : 0) +
+       (is_consistent_identity ? 1 : 0) +
 --- a/components/translate/core/browser/translate_url_fetcher.cc
 +++ b/components/translate/core/browser/translate_url_fetcher.cc
 @@ -57,6 +57,7 @@
@@ -6043,7 +6045,7 @@
        WEBKIT_VERSION_MAJOR,
        WEBKIT_VERSION_MINOR);
 +  if (strncmp(product.c_str(), "Chrome/", 7) != 0)
-+	base::StringAppendF(&user_agent, " Chrome/43.0.2357.132");
++	base::StringAppendF(&user_agent, " Chrome/44.0.2403.157");
    return user_agent;
  }
  

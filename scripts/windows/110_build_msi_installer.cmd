@@ -8,7 +8,7 @@ set ARCH=%1
 if "%ARCH%" == "" (
     set ARCH="x86"
 )
-set VERSION=44.0.0
+set VERSION=44.1.0
 set OUTPUT=%CD%\iridiumbrowser-%VERSION%-%ARCH%
 if "%1" == "x64" (
     set RELEASE_FOLDER=src\out\Release_x64
