@@ -1,20 +1,20 @@
 diff --git a/chrome/installer/mini_installer/mini_installer_constants.cc b/chrome/installer/mini_installer/mini_installer_constants.cc
-index 9a4f079..f5b95b8 100644
+index f17d448..8f34557 100644
 --- a/chrome/installer/mini_installer/mini_installer_constants.cc
 +++ b/chrome/installer/mini_installer/mini_installer_constants.cc
-@@ -40,7 +40,7 @@ const wchar_t kLZMAResourceType[] = L"B7";
+@@ -45,7 +45,7 @@ const wchar_t kLZMAResourceType[] = L"B7";
  const wchar_t kApRegistryValue[] = L"ap";
  // The name of the value in kCleanupRegistryKey that tells the installer not to
  // delete extracted files.
 -const wchar_t kCleanupRegistryValue[] = L"ChromeInstallerCleanup";
 +const wchar_t kCleanupRegistryValue[] = L"IridiumInstallerCleanup";
- // The name of an app's Client State registry value that holds the path to its
- // uninstaller.
- const wchar_t kUninstallRegistryValue[] = L"UninstallString";
-@@ -55,9 +55,9 @@ const wchar_t kCleanupRegistryKey[] =
-     L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Google Chrome";
+ // These values provide installer result codes to Omaha.
+ const wchar_t kInstallerErrorRegistryValue[] = L"InstallerError";
+ const wchar_t kInstallerExtraCode1RegistryValue[] = L"InstallerExtraCode1";
+@@ -65,9 +65,9 @@ const wchar_t kCleanupRegistryKey[] =
  #else
  // The path to the key containing each app's Client State registry key.
+ // No trailing slash on this one because the app's GUID is not appended.
 -const wchar_t kClientStateKeyBase[] = L"Software\\Chromium";
 +const wchar_t kClientStateKeyBase[] = L"Software\\Iridium";
  // The path to the key in which kCleanupRegistryValue is found.
@@ -78,12 +78,7 @@ index 77b119f..9e7a2b6 100644
  }
  
  base::string16 BrowserDistribution::GetAppDescription() {
-@@ -255,11 +255,11 @@ base::string16 BrowserDistribution::GetDistributionData(HKEY root_key) {
- }
- 
- base::string16 BrowserDistribution::GetUninstallLinkName() {
--  return L"Uninstall Chromium";
-+  return L"Uninstall Iridium";
+@@ -241,7 +241,7 @@ base::string16 BrowserDistribution::GetDistributionData(HKEY root_key) {
  }
  
  base::string16 BrowserDistribution::GetUninstallRegPath() {
